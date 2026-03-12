@@ -116,6 +116,23 @@
               </div>
             </td>
           </tr>
+          <tr class="hover">
+            <td class="label-text">切换男/女声</td>
+            <td class="text-right">
+              <div class="join">
+                <input
+                  v-for="opt in getVoiceGenderOptions()"
+                  class="btn join-item btn-sm"
+                  type="radio"
+                  name="voiceGender"
+                  :value="opt.value"
+                  :aria-label="opt.label"
+                  :checked="voiceGender === opt.value"
+                  @change="toggleVoiceGender(opt.value as VoiceGender)"
+                />
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </section>
@@ -180,7 +197,7 @@
 import { useAutoNextQuestion } from "~/composables/user/autoNext";
 import { useErrorTip } from "~/composables/user/errorTip";
 import { GamePlayMode, useGamePlayMode } from "~/composables/user/gamePlayMode";
-import { PronunciationType, usePronunciation } from "~/composables/user/pronunciation";
+import { PronunciationType, usePronunciation, VoiceGender } from "~/composables/user/pronunciation";
 import { SHORTCUT_KEY_TYPES, useShortcutKeyMode } from "~/composables/user/shortcutKey";
 import {
   useAutoPlayEnglish,
@@ -197,9 +214,11 @@ const { autoPlaySound, toggleAutoPlaySound } = useAutoPronunciation();
 const { autoPlayEnglish, toggleAutoPlayEnglish } = useAutoPlayEnglish();
 const {
   pronunciation,
-  // 发音配置列表
+  voiceGender,
   getPronunciationOptions,
+  getVoiceGenderOptions,
   togglePronunciation,
+  toggleVoiceGender,
 } = usePronunciation();
 const { showWordsWidth, toggleAutoWordsWidth } = useShowWordsWidth();
 const { useSpace, toggleUseSpaceSubmitAnswer } = useSpaceSubmitAnswer();

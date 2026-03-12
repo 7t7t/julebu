@@ -96,6 +96,12 @@ const showMenuOptions = computed(() => {
       icon: "i-ph-book",
     },
     {
+      title: "语音试听",
+      name: "tts-playground",
+      eventName: handleGoToTtsPlayground,
+      icon: "i-ph-speaker-high-duotone",
+    },
+    {
       title: "编辑器",
       name: "setting",
       eventName: handleGoToEditor,
@@ -160,6 +166,11 @@ function handleLogout() {
       signOut();
     },
   });
+}
+
+function handleGoToTtsPlayground() {
+  closeUserMenu();
+  navigateTo("/tts-playground");
 }
 
 function handleGoToEditor() {

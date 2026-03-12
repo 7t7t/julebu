@@ -91,14 +91,14 @@ export const tpl_1 = ({
             src: "/logo.png",
             width: "48",
             height: "48",
-            alt: "Earthworm logo",
+            alt: "Alrahim logo",
           },
         },
         {
           type: "p",
           props: {
             tw: "text-lg mb-2",
-            children: "© earthworm.cuixueshe.com",
+            children: "© Alrahim",
           },
         },
       ],

@@ -17,10 +17,10 @@
                 height="48"
                 class="mr-6 hidden overflow-hidden rounded-md md:block"
                 src="/logo.png"
-                alt="earth-worm-logo"
+                alt="alrahim-logo"
               />
               <h1 class="text-wrap text-2xl font-extrabold leading-normal dark:text-white">
-                Earthworm
+                Alrahim
               </h1>
             </div>
           </NuxtLink>

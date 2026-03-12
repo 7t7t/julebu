@@ -1,30 +1,31 @@
 <template>
-  <div
-    class="relative flex items-center justify-between border-t border-solid border-gray-300 pb-3 pt-4 text-base dark:border-gray-600"
-  >
+  <div class="tool-bar">
     <!-- 左侧 -->
-    <div class="flex items-center">
+    <div class="flex items-center gap-1">
       <NuxtLink
-        class="clickable-item flex items-center justify-center"
+        class="tool-icon-btn"
         :href="`/course-pack/${courseStore.currentCourse?.coursePackId}`"
       >
         <UTooltip text="课程列表">
-          <IconsExpand class="h-7 w-7" />
+          <IconsExpand class="h-5 w-5" />
         </UTooltip>
       </NuxtLink>
       <div
-        class="clickable-item ml-4"
+        class="tool-course-title"
         @click="openCourseContents"
       >
         <UTooltip text="课程题目列表">
-          {{ currentCourseInfo }}
+          <span class="tool-course-name">{{ courseStore.currentCourse?.title }}</span>
+          <span class="tool-course-progress"
+            >{{ currentSchedule }}/{{ courseStore.visibleStatementsCount }}</span
+          >
         </UTooltip>
       </div>
       <MainStudyVideoLink :video="courseStore.currentCourse?.video" />
     </div>
 
     <!-- 右侧 -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-1">
       <div
         @click="openGameSettingModal"
         v-if="isDictationMode()"
@@ -32,7 +33,7 @@
         <UTooltip text="游戏设置">
           <UIcon
             name="i-ph-gear"
-            class="clickable-item h-6 w-6"
+            class="tool-icon-btn h-5 w-5"
           />
         </UTooltip>
       </div>
@@ -47,7 +48,7 @@
         >
           <UIcon
             name="i-ph-pause"
-            class="clickable-item h-6 w-6"
+            class="tool-icon-btn h-5 w-5"
           />
         </UTooltip>
       </div>
@@ -56,7 +57,7 @@
         <UTooltip text="重置当前课程进度">
           <UIcon
             name="i-ph-arrow-counter-clockwise"
-            class="clickable-item h-6 w-6"
+            class="tool-icon-btn h-5 w-5"
           />
         </UTooltip>
       </div>
@@ -64,7 +65,7 @@
         <UTooltip text="排行榜">
           <UIcon
             name="i-ph-ranking"
-            class="clickable-item h-6 w-6"
+            class="tool-icon-btn h-5 w-5"
           />
         </UTooltip>
       </div>
@@ -74,8 +75,9 @@
   </div>
 
   <CommonProgressBar
-    class="h-6 p-[2px]"
+    class="h-3"
     :percentage="currentPercentage"
+    :show-label="false"
   />
   <RankRankingBoard />
 </template>
@@ -108,10 +110,6 @@ const { handleDoAgain } = useDoAgain();
 const { pauseGame } = useGamePause();
 const { openGameSettingModal } = useGameSetting();
 const modal = useModal();
-
-const currentCourseInfo = computed(() => {
-  return `${courseStore.currentCourse?.title}（${currentSchedule.value}/${courseStore.visibleStatementsCount}）`;
-});
 
 const currentSchedule = computed(() => {
   return courseStore.visibleStatementIndex + 1;
@@ -167,7 +165,35 @@ function useDoAgain() {
 </script>
 
 <style scoped>
-.clickable-item {
-  @apply cursor-pointer select-none hover:text-fuchsia-500;
+.tool-bar {
+  @apply relative flex items-center justify-between pb-2 pt-3 text-sm;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.tool-icon-btn {
+  @apply flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg
+         text-gray-500 transition-all duration-200
+         hover:bg-purple-50 hover:text-purple-500
+         dark:text-gray-400 dark:hover:bg-purple-900/20 dark:hover:text-purple-400;
+}
+
+.tool-course-title {
+  @apply flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5
+         text-gray-700 transition-all duration-200
+         hover:bg-purple-50 hover:text-purple-600
+         dark:text-gray-300 dark:hover:bg-purple-900/20 dark:hover:text-purple-400;
+}
+
+.tool-course-name {
+  @apply text-sm font-medium;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-course-progress {
+  @apply rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-600
+         dark:bg-purple-900/30 dark:text-purple-400;
 }
 </style>

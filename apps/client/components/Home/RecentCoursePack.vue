@@ -26,18 +26,18 @@
             }"
           >
             <template #actions>
-              <div class="mt-2 flex justify-between">
+              <div class="mt-3 flex gap-2">
                 <button
-                  class="btn btn-sm tw-btn-blue"
+                  class="recent-btn recent-btn--outline"
                   @click.stop="gotoCourseList(coursePack.coursePackId)"
                 >
                   课程列表
                 </button>
                 <button
-                  class="btn btn-success btn-sm text-white"
+                  class="recent-btn recent-btn--primary"
                   @click.stop="gotoGame(coursePack.coursePackId, coursePack.courseId)"
                 >
-                  继续游戏
+                  继续学习
                 </button>
               </div>
             </template>
@@ -82,4 +82,25 @@ async function setup() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.recent-btn {
+  @apply flex-1 cursor-pointer rounded-lg px-3 py-2 text-center text-xs font-medium transition-all duration-200;
+}
+
+.recent-btn--outline {
+  @apply border border-gray-200 text-gray-600
+         hover:border-purple-300 hover:text-purple-600
+         dark:border-gray-700 dark:text-gray-400
+         dark:hover:border-purple-500 dark:hover:text-purple-400;
+}
+
+.recent-btn--primary {
+  @apply border-none text-white;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.recent-btn--primary:hover {
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+</style>

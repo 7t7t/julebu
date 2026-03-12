@@ -5,12 +5,17 @@
     </template>
 
     <template v-else>
-      <h2 class="mb-4 text-center text-3xl dark:border-gray-600">
-        {{ coursePackStore.currentCoursePack?.title }}
-      </h2>
+      <div class="course-list-header">
+        <h2 class="course-list-title">
+          {{ coursePackStore.currentCoursePack?.title }}
+        </h2>
+        <p class="course-list-subtitle">
+          {{ coursePackStore.currentCoursePack?.courses?.length || 0 }} 节课程
+        </p>
+      </div>
       <div class="h-full scrollbar-hide">
         <div
-          class="grid h-[79vh] grid-cols-1 justify-start gap-8 overflow-y-auto overflow-x-hidden pb-96 pl-0 pr-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          class="grid h-[79vh] grid-cols-1 justify-start gap-4 overflow-y-auto overflow-x-hidden pb-96 pl-0 pr-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           <template
             v-for="course in coursePackStore.currentCoursePack?.courses"
@@ -59,4 +64,16 @@ function handleChangeCourse(courseId: string) {
 }
 </script>
 
-<style></style>
+<style scoped>
+.course-list-header {
+  @apply mb-6 text-center;
+}
+
+.course-list-title {
+  @apply text-2xl font-bold text-gray-800 dark:text-gray-100;
+}
+
+.course-list-subtitle {
+  @apply mt-1 text-sm text-gray-400 dark:text-gray-500;
+}
+</style>

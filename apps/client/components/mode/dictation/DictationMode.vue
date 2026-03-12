@@ -1,14 +1,33 @@
 <template>
   <div class="flex h-full items-center justify-center">
-    <div v-if="!isStart">
+    <div
+      v-if="!isStart"
+      class="start-prompt"
+    >
       <button
-        class="btn"
         v-if="isMobile"
+        class="start-btn"
         @click="startGame"
       >
-        准备好了吗？ 点我开始
+        <UIcon
+          name="i-ph-play-fill"
+          class="mr-2 h-5 w-5"
+        />
+        准备好了吗？点我开始
       </button>
-      <p v-else>准备好了吗？(按任意键开启游戏)</p>
+      <div
+        v-else
+        class="start-hint"
+      >
+        <div class="start-hint-icon">
+          <UIcon
+            name="i-ph-keyboard"
+            class="h-8 w-8 text-purple-400"
+          />
+        </div>
+        <p class="start-hint-text">准备好了吗？</p>
+        <p class="start-hint-sub">按任意键开启游戏</p>
+      </div>
     </div>
     <div v-else>
       <template v-if="isQuestion()">
@@ -59,4 +78,53 @@ function useStartGame() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.start-prompt {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.start-btn {
+  @apply flex cursor-pointer items-center rounded-xl border-none bg-purple-500 px-8 py-4 text-lg font-medium
+         text-white shadow-lg transition-all duration-300
+         hover:bg-purple-600 hover:shadow-xl;
+}
+
+.start-hint {
+  @apply flex flex-col items-center gap-3;
+}
+
+.start-hint-icon {
+  @apply flex h-16 w-16 items-center justify-center rounded-2xl;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(139, 92, 246, 0.15));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.start-hint-text {
+  @apply text-2xl font-semibold text-gray-700 dark:text-gray-200;
+}
+
+.start-hint-sub {
+  @apply text-base text-gray-400 dark:text-gray-500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+</style>

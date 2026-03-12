@@ -9,16 +9,16 @@
               height="48"
               class="mr-6 overflow-hidden rounded-md"
               src="/logo.png"
-              alt="earth-worm-logo"
+              alt="alrahim-logo"
             />
-            <span class="mt-4 text-3xl">Earthworm</span>
+            <span class="mt-4 text-3xl">Alrahim</span>
           </div>
 
           <p class="typing mt-4 max-w-[16rem] text-base leading-relaxed">
             一起来加入我们
             <span
               class="bg-gradient-to-r from-purple-400 via-purple-400 to-gray-400 bg-clip-text text-transparent dark:from-purple-600 dark:to-gray-100"
-              >Earthworm</span
+              >Alrahim</span
             >!
           </p>
 
@@ -65,7 +65,7 @@
 
         <div class="grid grid-cols-1 gap-6 transition sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
           <div>
-            <p class="text-lg font-medium">Earthworm</p>
+            <p class="text-lg font-medium">Alrahim</p>
 
             <ul class="mt-6 space-y-4 text-sm">
               <li>

@@ -1,13 +1,16 @@
 <template>
   <div class="flex w-full flex-col">
-    <h2 class="mb-4 text-center text-3xl dark:border-gray-600">课程包列表</h2>
+    <div class="pack-list-header">
+      <h2 class="pack-list-title">课程包列表</h2>
+      <p class="pack-list-subtitle">选择课程包开始学习</p>
+    </div>
     <template v-if="isLoading">
       <Loading></Loading>
     </template>
     <template v-else>
       <div class="h-[79vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
         <div
-          class="grid auto-rows-fr grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-0 md:grid-cols-3 lg:grid-cols-4"
+          class="grid auto-rows-fr grid-cols-1 gap-5 px-4 sm:grid-cols-2 sm:px-0 md:grid-cols-3 lg:grid-cols-4"
         >
           <template v-for="coursePack in coursePackStore.coursePacks">
             <CoursePackCard
@@ -61,4 +64,16 @@ function handleGoToCoursePack(coursePack: CoursePack) {
 }
 </script>
 
-<style></style>
+<style scoped>
+.pack-list-header {
+  @apply mb-6 text-center;
+}
+
+.pack-list-title {
+  @apply text-2xl font-bold text-gray-800 dark:text-gray-100;
+}
+
+.pack-list-subtitle {
+  @apply mt-1 text-sm text-gray-400 dark:text-gray-500;
+}
+</style>

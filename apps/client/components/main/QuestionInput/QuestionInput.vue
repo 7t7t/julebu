@@ -1,13 +1,13 @@
 <template>
   <div class="text-center">
-    <div class="relative flex flex-wrap justify-center gap-2 transition-all">
+    <div class="relative flex flex-wrap justify-center gap-3 transition-all">
       <template
         v-for="(w, i) in courseStore.words"
         :key="i"
       >
         <div
           v-if="isWord(w)"
-          class="h-[4rem] rounded-[2px] border-b-2 border-solid text-[3em] leading-none transition-all"
+          class="word-slot"
           :class="getWordsClassNames(i)"
           :style="{ minWidth: `${inputWidth(w)}ch` }"
         >
@@ -15,7 +15,7 @@
         </div>
         <div
           v-else
-          class="h-[4rem] rounded-[2px] text-[3em] leading-none transition-all"
+          class="word-punctuation"
         >
           {{ w }}
         </div>
@@ -38,20 +38,20 @@
     </div>
     <div class="mt-12 flex flex-col items-center justify-center gap-4 md:hidden">
       <button
-        class="btn btn-outline btn-sm"
+        class="mobile-btn mobile-btn-primary"
         @click="handleSubmitAnswer"
       >
         提交
       </button>
-      <div class="flex gap-4">
+      <div class="flex gap-3">
         <button
-          class="btn btn-outline btn-sm"
+          class="mobile-btn"
           @click="handleShowAnswerTip"
         >
           {{ isAnswerTip() ? "隐藏" : "显示" }}答案
         </button>
         <button
-          class="btn btn-outline btn-sm"
+          class="mobile-btn"
           @click="handlePlaySound"
         >
           播放声音
@@ -148,17 +148,17 @@ function getWordsClassNames(index: number) {
   const word = findWordById(index)!;
   // 当前单词激活 且 聚焦
   if (word.isActive && focusing.value) {
-    return "text-fuchsia-500 border-b-fuchsia-500";
+    return "word-active";
   }
 
   // 当前单词错误 且 聚焦
   if (word.incorrect && focusing.value) {
     // Fix 修复模式添加动画
-    return `text-red-500 border-b-red-500 ${isFixMode() && "animate-shake"}`;
+    return `word-error ${isFixMode() && "animate-shake"}`;
   }
 
   // 默认样式
-  return "text-[#20202099] border-b-gray-300 dark:text-gray-300 dark:border-b-gray-400";
+  return "word-default";
 }
 
 // 输入宽度
@@ -231,3 +231,51 @@ function preventCursorMove(event: MouseEvent) {
   focusInput();
 }
 </script>
+
+<style scoped>
+.word-slot {
+  @apply h-[4rem] rounded-md text-[3em] leading-none transition-all duration-300;
+  border-bottom: 3px solid transparent;
+  padding: 0 2px;
+}
+
+.word-punctuation {
+  @apply h-[4rem] rounded-md text-[3em] leading-none transition-all duration-300;
+  padding: 0 1px;
+}
+
+.word-active {
+  @apply text-purple-500;
+  border-bottom-color: #a855f7;
+  background: linear-gradient(to top, rgba(168, 85, 247, 0.06), transparent);
+}
+
+.word-error {
+  @apply text-red-500;
+  border-bottom-color: #ef4444;
+  background: linear-gradient(to top, rgba(239, 68, 68, 0.06), transparent);
+}
+
+.word-default {
+  color: rgba(32, 32, 32, 0.5);
+  border-bottom-color: #d1d5db;
+}
+
+:root.dark .word-default,
+.dark .word-default {
+  @apply text-gray-400;
+  border-bottom-color: #4b5563;
+}
+
+.mobile-btn {
+  @apply cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium
+         text-gray-700 transition-all duration-200
+         hover:border-purple-300 hover:bg-purple-50 hover:text-purple-600
+         dark:border-gray-600 dark:text-gray-300 dark:hover:border-purple-500 dark:hover:bg-purple-900/20;
+}
+
+.mobile-btn-primary {
+  @apply border-purple-500 bg-purple-500 text-white
+         hover:border-purple-600 hover:bg-purple-600 hover:text-white;
+}
+</style>

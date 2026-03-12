@@ -1,6 +1,6 @@
 <template>
   <div class="font-customFont">
-    <LandingBanner @start-earthworm="startEarthworm" />
+    <LandingBanner @start-alrahim="startAlrahim" />
     <LandingFeatures />
     <LandingComments />
     <LandingQuestions />
@@ -16,27 +16,27 @@ import { useRouter } from "vue-router";
 import { isAuthenticated } from "~/services/auth";
 import { cancelShortcut, registerShortcut } from "~/utils/keyboardShortcuts";
 
-const { startEarthworm } = useShortcutToGame();
+const { startAlrahim } = useShortcutToGame();
 
 function useShortcutToGame() {
   const router = useRouter();
 
-  async function startEarthworm() {
+  async function startAlrahim() {
     if (!isAuthenticated()) {
       router.push(`/course-pack`);
     }
   }
 
   onMounted(() => {
-    registerShortcut("enter", startEarthworm);
+    registerShortcut("enter", startAlrahim);
   });
 
   onUnmounted(() => {
-    cancelShortcut("enter", startEarthworm);
+    cancelShortcut("enter", startAlrahim);
   });
 
   return {
-    startEarthworm,
+    startAlrahim,
   };
 }
 </script>

@@ -34,7 +34,7 @@
         class="btn relative"
         type="button"
       >
-        <strong>开启Earthworm</strong>
+        <strong>开启Alrahim</strong>
         <div id="container-stars">
           <div id="stars"></div>
         </div>
@@ -89,10 +89,10 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(["start-earthworm"]);
+const emit = defineEmits(["start-alrahim"]);
 
 function handleKeydown() {
-  emit("start-earthworm");
+  emit("start-alrahim");
 }
 </script>
 

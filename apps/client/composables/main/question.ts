@@ -284,16 +284,14 @@ export function useInput({
   function handleSpaceSubmitAnswer(
     useSpaceSubmitAnswer: KeyboardInputOptions["useSpaceSubmitAnswer"],
   ) {
-    if (useSpaceSubmitAnswer?.enable) {
-      submitAnswer(
-        () => {
-          useSpaceSubmitAnswer?.rightCallback?.();
-        },
-        () => {
-          useSpaceSubmitAnswer?.errorCallback?.();
-        },
-      );
-    }
+    submitAnswer(
+      () => {
+        useSpaceSubmitAnswer?.rightCallback?.();
+      },
+      () => {
+        useSpaceSubmitAnswer?.errorCallback?.();
+      },
+    );
   }
 
   interface KeyboardInputOptions {

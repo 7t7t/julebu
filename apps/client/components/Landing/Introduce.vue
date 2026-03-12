@@ -4,7 +4,7 @@
     id="what"
   >
     <CommonTitle
-      title="What is Earthworm?"
+      title="What is Alrahim?"
       :description="['An open-source, collaborative, user-friendly English learning tool.']"
     />
     <section class="flex w-full justify-around py-8">

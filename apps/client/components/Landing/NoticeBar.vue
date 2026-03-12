@@ -22,7 +22,7 @@
 const props = defineProps({
   main_title: {
     type: String,
-    default: "Earthworm is now available! 🎉",
+    default: "Alrahim is now available! 🎉",
   },
   sub_title: {
     type: String,

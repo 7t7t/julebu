@@ -1,11 +1,13 @@
 <template>
-  <div class="flex w-full flex-col pt-2">
+  <div class="game-page">
     <template v-if="isLoading">
       <Loading></Loading>
     </template>
     <template v-else>
       <MainTool />
-      <MainGame />
+      <div class="game-content">
+        <MainGame />
+      </div>
     </template>
   </div>
 </template>
@@ -52,3 +54,14 @@ onMounted(async () => {
   isLoading.value = false;
 });
 </script>
+
+<style scoped>
+.game-page {
+  @apply flex w-full flex-col pt-2;
+}
+
+.game-content {
+  @apply mt-6 flex-1;
+  min-height: 50vh;
+}
+</style>

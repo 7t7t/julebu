@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <div class="mb-4 mt-10 text-2xl dark:text-gray-50">
+    <div class="chinese-hint">
       {{ courseStore.currentStatement?.chinese || "生存还是毁灭，这是一个问题" }}
     </div>
     <MainQuestionInput />
@@ -35,3 +35,13 @@ function handleAutoPlayEnglish() {
   }
 }
 </script>
+
+<style scoped>
+.chinese-hint {
+  @apply mb-6 mt-8 text-center text-2xl font-medium dark:text-gray-100;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+</style>
