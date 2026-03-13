@@ -38,6 +38,22 @@ export class ToolController {
     description: "强调: strong, moderate, reduced, none",
   })
   @ApiQuery({ name: "contour", required: false, description: "音调轮廓(抑扬顿挫)" })
+  @ApiQuery({
+    name: "voiceName",
+    required: false,
+    description: "具体声音名: en-US-DavisNeural, en-US-AndrewNeural...",
+  })
+  @ApiQuery({ name: "naturalPause", required: false, description: "自然停顿: true(默认)/false" })
+  @ApiQuery({
+    name: "sentenceBreak",
+    required: false,
+    description: "句间停顿: 500ms(默认), 300ms~1000ms",
+  })
+  @ApiQuery({
+    name: "clauseBreak",
+    required: false,
+    description: "从句停顿: 200ms(默认), 100ms~500ms",
+  })
   @Get("tts")
   async tts(
     @Query("text") text: string,
@@ -50,6 +66,10 @@ export class ToolController {
     @Query("role") role: string,
     @Query("emphasis") emphasis: string,
     @Query("contour") contour: string,
+    @Query("voiceName") voiceName: string,
+    @Query("naturalPause") naturalPause: string,
+    @Query("sentenceBreak") sentenceBreak: string,
+    @Query("clauseBreak") clauseBreak: string,
     @Res() res: Response,
   ) {
     if (!text || text.length > 2000) {
@@ -60,6 +80,7 @@ export class ToolController {
     try {
       const audio = await this.ttsService.synthesize(text, {
         gender: voice === "female" ? "female" : "male",
+        voiceName: voiceName || undefined,
         rate: rate || undefined,
         pitch: pitch || undefined,
         volume: volume || undefined,
@@ -68,6 +89,9 @@ export class ToolController {
         role: role || undefined,
         emphasis: emphasis || undefined,
         contour: contour || undefined,
+        naturalPause: naturalPause === "false" ? false : true,
+        sentenceBreak: sentenceBreak || undefined,
+        clauseBreak: clauseBreak || undefined,
       });
       res.set({
         "Content-Type": "audio/mpeg",

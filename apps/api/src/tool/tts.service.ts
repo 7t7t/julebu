@@ -30,6 +30,7 @@ export type VoiceGender = "male" | "female";
 
 export interface TtsOptions {
   gender?: VoiceGender;
+  voiceName?: string; // 具体声音名称，优先于 gender
   rate?: string; // 语速: "-50%" ~ "+100%"
   pitch?: string; // 音调: "-50Hz" ~ "+50Hz" 或百分比
   volume?: string; // 音量: "-50%" ~ "+50%"
@@ -38,21 +39,25 @@ export interface TtsOptions {
   role?: string; // 角色: YoungAdultMale, SeniorMale...
   emphasis?: string; // 强调: strong, moderate, reduced, none
   contour?: string; // 音调轮廓 (抑扬顿挫): "(0%,+20Hz)(25%,+10Hz)(75%,-10Hz)(100%,-20Hz)"
+  naturalPause?: boolean; // 自然停顿：在标点处插入 break 标签
+  sentenceBreak?: string; // 句间停顿时长: "500ms", "800ms" 等
+  clauseBreak?: string; // 从句停顿时长: "200ms", "350ms" 等
 }
 
 const VOICE_CONFIG: Record<VoiceGender, { voice: string; defaultPitch: string }> = {
-  male: { voice: "en-US-GuyNeural", defaultPitch: "+32Hz" },
-  female: { voice: "en-US-JennyNeural", defaultPitch: "+0%" },
+  male: { voice: "en-US-GuyNeural", defaultPitch: "-4Hz" },
+  female: { voice: "en-US-JennyNeural", defaultPitch: "+0Hz" },
 };
 
-// en-US-GuyNeural 支持的说话风格
+// Edge TTS 支持的说话风格 (部分声音支持)
 export const AVAILABLE_STYLES = [
   "newscast", // 新闻播报 — 最接近 CET-6 听力
-  "angry", // 愤怒
-  "cheerful", // 愉快
-  "sad", // 悲伤
-  "excited", // 兴奋
   "friendly", // 友好
+  "cheerful", // 愉快
+  "calm", // 平静
+  "excited", // 兴奋
+  "sad", // 悲伤
+  "angry", // 愤怒
   "terrified", // 恐惧
   "shouting", // 喊叫
   "unfriendly", // 冷漠
@@ -105,32 +110,63 @@ export class TtsService {
     return audioBuffer;
   }
 
+  /**
+   * 在标点处插入 SSML <break> 标签，模拟自然停顿节奏
+   * - 句号/问号/感叹号 → 句间停顿 (较长)
+   * - 逗号/分号/冒号/破折号 → 从句停顿 (较短)
+   */
+  private insertNaturalBreaks(text: string, sentenceBreak: string, clauseBreak: string): string {
+    return (
+      text
+        // 句末标点 → 加句间停顿
+        .replace(/([.!?])\s+/g, `$1<break time="${sentenceBreak}"/> `)
+        // 从句标点 → 加从句停顿
+        .replace(/([,;:—–])\s+/g, `$1<break time="${clauseBreak}"/> `)
+        // 连字符短语间加微停顿 (如 "well-known fact" → 不处理)
+        // 长破折号单独处理
+        .replace(/ — /g, ` <break time="${clauseBreak}"/>— `)
+    );
+  }
+
   private buildSsml(text: string, options: TtsOptions): string {
     const gender = options.gender || "male";
     const config = VOICE_CONFIG[gender];
-    const rate = options.rate || "-8%";
+    const voiceName = options.voiceName || config.voice;
+    const rate = options.rate || "-10%";
     const pitch = options.pitch || config.defaultPitch;
     const volume = options.volume || "+0%";
-    const style = options.style || "";
-    const styleDegree = options.styleDegree || "1.0";
-    const role = options.role || "";
-    const emphasis = options.emphasis || "";
-    const contour = options.contour || "";
 
-    const escapedText = escapeXml(text);
+    const sentenceBreak = options.sentenceBreak || "500ms";
+    const clauseBreak = options.clauseBreak || "200ms";
 
-    // 构建 prosody 属性 (Edge TTS readaloud API 不支持 contour，忽略)
+    // 先转义 XML 特殊字符
+    let processedText = escapeXml(text);
+
+    // 插入自然停顿 (默认开启，除非显式关闭)
+    if (options.naturalPause !== false) {
+      processedText = this.insertNaturalBreaks(processedText, sentenceBreak, clauseBreak);
+    }
+
+    // 构建 prosody 属性
     const prosodyAttrs = `rate="${rate}" pitch="${pitch}" volume="${volume}"`;
 
-    // Edge TTS readaloud API 只支持 prosody 标签
-    // express-as (style), emphasis, contour 均不支持
-    const content = `<prosody ${prosodyAttrs}>${escapedText}</prosody>`;
+    const content = `<prosody ${prosodyAttrs}>${processedText}</prosody>`;
 
     return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-      <voice name="${config.voice}">
+      <voice name="${voiceName}">
         ${content}
       </voice>
     </speak>`;
+  }
+
+  /**
+   * 单次 WebSocket 尝试，带自动重试
+   */
+  private async trySynthesize(ssml: string, tmpFile: string): Promise<Buffer> {
+    await this.sendSsmlToEdgeTts(ssml, tmpFile);
+    const audio = fs.readFileSync(tmpFile);
+    if (audio.length > 0) return audio;
+    throw new Error("Empty audio");
   }
 
   private async generateAudio(text: string, options: TtsOptions): Promise<Buffer> {
@@ -138,36 +174,63 @@ export class TtsService {
       os.tmpdir(),
       `tts_${Date.now()}_${Math.random().toString(36).slice(2)}.mp3`,
     );
-    const ssml = this.buildSsml(text, options);
 
-    try {
-      await this.sendSsmlToEdgeTts(ssml, tmpFile);
-      const audio = fs.readFileSync(tmpFile);
-      if (audio.length > 0) return audio;
-      throw new Error("Empty audio");
-    } catch (err) {
-      this.logger.warn(`SSML TTS failed (${err.message}), retrying without style/emphasis...`);
-      // 回退：去掉 style/emphasis，只用基础 prosody
-      try {
-        this.cleanTmpFile(tmpFile);
-        const fallbackSsml = this.buildSsml(text, {
+    // 回退链: 完整SSML → 去break标签 → 纯prosody → 延时重试纯prosody
+    const fallbackChain: Array<{ label: string; buildOptions: TtsOptions; delay?: number }> = [
+      { label: "full SSML", buildOptions: options },
+      {
+        label: "without breaks",
+        buildOptions: { ...options, naturalPause: false },
+      },
+      {
+        label: "plain prosody",
+        buildOptions: {
           ...options,
+          naturalPause: false,
           style: undefined,
           styleDegree: undefined,
           role: undefined,
           emphasis: undefined,
-        });
-        await this.sendSsmlToEdgeTts(fallbackSsml, tmpFile);
-        const audio = fs.readFileSync(tmpFile);
-        if (audio.length > 0) return audio;
-        throw new Error("Fallback also empty");
-      } catch (fallbackErr) {
-        this.logger.error(`TTS fallback also failed: ${fallbackErr.message}`);
-        throw fallbackErr;
+        },
+      },
+      {
+        label: "plain prosody (retry after delay)",
+        buildOptions: {
+          ...options,
+          naturalPause: false,
+          style: undefined,
+          styleDegree: undefined,
+          role: undefined,
+          emphasis: undefined,
+        },
+        delay: 2000,
+      },
+    ];
+
+    for (let i = 0; i < fallbackChain.length; i++) {
+      const { label, buildOptions, delay } = fallbackChain[i];
+      try {
+        if (delay) await this.sleep(delay);
+        this.cleanTmpFile(tmpFile);
+        const ssml = this.buildSsml(text, buildOptions);
+        const audio = await this.trySynthesize(ssml, tmpFile);
+        if (i > 0) this.logger.log(`TTS succeeded with fallback: ${label}`);
+        return audio;
+      } catch (err) {
+        const isLast = i === fallbackChain.length - 1;
+        if (isLast) {
+          this.logger.error(`TTS all ${fallbackChain.length} attempts failed: ${err.message}`);
+          throw err;
+        }
+        this.logger.warn(`TTS [${label}] failed (${err.message}), trying next fallback...`);
       }
-    } finally {
-      this.cleanTmpFile(tmpFile);
     }
+
+    throw new Error("TTS generation failed");
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private cleanTmpFile(filePath: string) {
@@ -199,7 +262,7 @@ export class TtsService {
         const timeout = setTimeout(() => {
           wsConnect.close();
           reject(new Error("TTS WebSocket timeout"));
-        }, 15000);
+        }, 20000);
 
         wsConnect.on("open", () => {
           // 发送配置
@@ -238,6 +301,14 @@ export class TtsService {
         wsConnect.on("error", (err: Error) => {
           clearTimeout(timeout);
           reject(err);
+        });
+
+        wsConnect.on("close", (code: number) => {
+          clearTimeout(timeout);
+          // 非正常关闭 (1000=正常, 1005=无状态码)
+          if (code !== 1000 && code !== 1005) {
+            reject(new Error(`WebSocket closed unexpectedly: code ${code}`));
+          }
         });
       } catch (err) {
         reject(err);

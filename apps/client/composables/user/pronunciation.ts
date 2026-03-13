@@ -38,17 +38,31 @@ export interface VoiceSettings {
   styleDegree: string;
   emphasis: string;
   contour: string;
+  // 自然停顿
+  naturalPause: boolean;
+  sentenceBreak: string;
+  clauseBreak: string;
+  // 音频后处理 (前端 Web Audio API)
+  lowFreqNoise: number; // 低频环境噪声强度 0~100
+  warmth: number; // 暖声滤波频率截止 0~100 (越高越闷)
+  voiceName: string; // 具体声音模型名
 }
 
 const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
   gender: VoiceGender.Male,
-  rate: "-8%",
-  pitch: "+32Hz",
-  volume: "+5%",
+  rate: "-10%",
+  pitch: "-4Hz",
+  volume: "+3%",
   style: "",
   styleDegree: "1.0",
   emphasis: "",
   contour: "",
+  naturalPause: true,
+  sentenceBreak: "650ms",
+  clauseBreak: "280ms",
+  lowFreqNoise: 12,
+  warmth: 40,
+  voiceName: "en-US-GuyNeural",
 };
 
 const PRONUNCIATION_TYPE = "pronunciationType";
@@ -143,6 +157,12 @@ export function usePronunciation() {
       params.set("styleDegree", voiceSettings.styleDegree);
     if (voiceSettings.emphasis) params.set("emphasis", voiceSettings.emphasis);
     if (voiceSettings.contour) params.set("contour", voiceSettings.contour);
+    if (voiceSettings.voiceName) params.set("voiceName", voiceSettings.voiceName);
+    if (voiceSettings.naturalPause === false) params.set("naturalPause", "false");
+    if (voiceSettings.sentenceBreak && voiceSettings.sentenceBreak !== "500ms")
+      params.set("sentenceBreak", voiceSettings.sentenceBreak);
+    if (voiceSettings.clauseBreak && voiceSettings.clauseBreak !== "200ms")
+      params.set("clauseBreak", voiceSettings.clauseBreak);
 
     return `${backendUrl}tool/tts?${params.toString()}`;
   }
@@ -169,6 +189,7 @@ export function usePronunciation() {
     text: string,
     options: {
       voice?: string;
+      voiceName?: string;
       rate?: string;
       pitch?: string;
       volume?: string;
@@ -176,12 +197,16 @@ export function usePronunciation() {
       styleDegree?: string;
       emphasis?: string;
       contour?: string;
+      naturalPause?: boolean;
+      sentenceBreak?: string;
+      clauseBreak?: string;
     } = {},
   ): string {
     const backendUrl = getBackendEndpoint();
     if (!backendUrl || !text) return "";
     const params = new URLSearchParams({ text });
     params.set("voice", options.voice || voiceGender.value);
+    if (options.voiceName) params.set("voiceName", options.voiceName);
     if (options.rate) params.set("rate", options.rate);
     if (options.pitch) params.set("pitch", options.pitch);
     if (options.volume) params.set("volume", options.volume);
@@ -189,6 +214,9 @@ export function usePronunciation() {
     if (options.styleDegree) params.set("styleDegree", options.styleDegree);
     if (options.emphasis) params.set("emphasis", options.emphasis);
     if (options.contour) params.set("contour", options.contour);
+    if (options.naturalPause === false) params.set("naturalPause", "false");
+    if (options.sentenceBreak) params.set("sentenceBreak", options.sentenceBreak);
+    if (options.clauseBreak) params.set("clauseBreak", options.clauseBreak);
     return `${backendUrl}tool/tts?${params.toString()}`;
   }
 

@@ -32,7 +32,7 @@
               name="i-ph-gender-male"
               class="h-5 w-5"
             />
-            男声 (Guy)
+            男声
           </button>
           <button
             :class="['tts-radio-btn', voice === 'female' && 'tts-radio-btn--active']"
@@ -42,7 +42,21 @@
               name="i-ph-gender-female"
               class="h-5 w-5"
             />
-            女声 (Jenny)
+            女声
+          </button>
+        </div>
+
+        <!-- 具体声音模型 -->
+        <label class="tts-label mt-4">声音模型</label>
+        <div class="tts-voice-grid">
+          <button
+            v-for="v in voice === 'male' ? maleVoices : femaleVoices"
+            :key="v.name"
+            :class="['tts-voice-btn', voiceName === v.name && 'tts-voice-btn--active']"
+            @click="voiceName = v.name"
+          >
+            <span class="tts-voice-btn-name">{{ v.label }}</span>
+            <span class="tts-voice-btn-desc">{{ v.desc }}</span>
           </button>
         </div>
       </div>
@@ -120,6 +134,107 @@
           />
           <div class="tts-range-labels">
             <span>轻 (-50%)</span><span>正常</span><span>响 (+50%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 高级调参: 自然度 -->
+      <div class="tts-card">
+        <label class="tts-label">自然度调节</label>
+
+        <div class="tts-slider-row">
+          <div class="tts-slider-header">
+            <span class="tts-slider-name">
+              <UIcon
+                name="i-ph-pause"
+                class="h-4 w-4"
+              />
+              句间停顿
+            </span>
+            <span class="tts-slider-value">{{ sentenceBreak }}ms</span>
+          </div>
+          <input
+            v-model.number="sentenceBreak"
+            type="range"
+            min="200"
+            max="1000"
+            step="50"
+            class="tts-range"
+          />
+          <div class="tts-range-labels">
+            <span>紧凑 (200ms)</span><span>标准</span><span>从容 (1000ms)</span>
+          </div>
+        </div>
+
+        <div class="tts-slider-row">
+          <div class="tts-slider-header">
+            <span class="tts-slider-name">
+              <UIcon
+                name="i-ph-dots-three"
+                class="h-4 w-4"
+              />
+              从句停顿
+            </span>
+            <span class="tts-slider-value">{{ clauseBreak }}ms</span>
+          </div>
+          <input
+            v-model.number="clauseBreak"
+            type="range"
+            min="50"
+            max="500"
+            step="25"
+            class="tts-range"
+          />
+          <div class="tts-range-labels">
+            <span>连读感 (50ms)</span><span>标准</span><span>逐字清晰 (500ms)</span>
+          </div>
+        </div>
+
+        <div class="tts-slider-row">
+          <div class="tts-slider-header">
+            <span class="tts-slider-name">
+              <UIcon
+                name="i-ph-radio"
+                class="h-4 w-4"
+              />
+              低频噪声
+            </span>
+            <span class="tts-slider-value">{{ lowFreqNoise }}%</span>
+          </div>
+          <input
+            v-model.number="lowFreqNoise"
+            type="range"
+            min="0"
+            max="60"
+            step="5"
+            class="tts-range"
+          />
+          <div class="tts-range-labels">
+            <span>无噪声</span><span>轻微底噪</span><span>考场环境 (60%)</span>
+          </div>
+        </div>
+
+        <div class="tts-slider-row">
+          <div class="tts-slider-header">
+            <span class="tts-slider-name">
+              <UIcon
+                name="i-ph-equalizer"
+                class="h-4 w-4"
+              />
+              暖声滤波
+            </span>
+            <span class="tts-slider-value">{{ warmth }}%</span>
+          </div>
+          <input
+            v-model.number="warmth"
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            class="tts-range"
+          />
+          <div class="tts-range-labels">
+            <span>数字清亮</span><span>自然</span><span>广播温暖 (100%)</span>
           </div>
         </div>
       </div>
@@ -213,20 +328,66 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import { usePronunciation, VoiceGender } from "~/composables/user/pronunciation";
 
 const { voiceSettings, buildTtsUrl, saveVoiceSettings, toggleVoiceGender } = usePronunciation();
 
+// 声音模型列表
+interface VoiceModel {
+  name: string;
+  label: string;
+  desc: string;
+}
+
+const maleVoices: VoiceModel[] = [
+  { name: "en-US-GuyNeural", label: "Guy", desc: "六级真题校准，推荐" },
+  { name: "en-US-AndrewNeural", label: "Andrew", desc: "自然沉稳" },
+  { name: "en-US-BrianNeural", label: "Brian", desc: "清晰专业" },
+  { name: "en-US-ChristopherNeural", label: "Christopher", desc: "浑厚低沉" },
+  { name: "en-US-DavisNeural", label: "Davis", desc: "温和自然" },
+  { name: "en-US-EricNeural", label: "Eric", desc: "成熟稳重" },
+];
+
+const femaleVoices: VoiceModel[] = [
+  { name: "en-US-JennyNeural", label: "Jenny", desc: "清晰标准" },
+  { name: "en-US-AriaNeural", label: "Aria", desc: "自然亲和" },
+  { name: "en-US-SaraNeural", label: "Sara", desc: "柔和温暖" },
+  { name: "en-US-MichelleNeural", label: "Michelle", desc: "专业播报" },
+];
+
 // 从已保存的设置初始化
-const text = ref("The rapid development of technology has changed our way of life.");
+const text = ref(
+  "There are at least four major problems with work in America today. First work can be alienating. Workers are often not in control of how they work when they work, what is done with the goods and services they produce and with is done with the profits made from their work.",
+);
 const voice = ref<"male" | "female">(voiceSettings.gender || "male");
-const rate = ref(parseNum(voiceSettings.rate, -8));
-const pitch = ref(parseNum(voiceSettings.pitch, 32));
+const voiceName = ref(voiceSettings.voiceName || "en-US-AndrewNeural");
+const rate = ref(parseNum(voiceSettings.rate, -12));
+const pitch = ref(parseNum(voiceSettings.pitch, 0));
 const volume = ref(parseNum(voiceSettings.volume, 5));
 const isPlaying = ref(false);
 const saved = ref(false);
+
+// 自然度参数
+const sentenceBreak = ref(parseNum(voiceSettings.sentenceBreak, 500));
+const clauseBreak = ref(parseNum(voiceSettings.clauseBreak, 200));
+const lowFreqNoise = ref(voiceSettings.lowFreqNoise ?? 0);
+const warmth = ref(voiceSettings.warmth ?? 0);
+
+// Web Audio API 上下文 (懒初始化)
+let audioCtx: AudioContext | null = null;
+let noiseSource: AudioBufferSourceNode | null = null;
+let noiseGain: GainNode | null = null;
+
+// 切换男/女声时自动选择默认声音模型
+watch(voice, (val) => {
+  if (val === "male") {
+    voiceName.value = "en-US-AndrewNeural";
+  } else {
+    voiceName.value = "en-US-JennyNeural";
+  }
+});
 
 let audioEl: HTMLAudioElement | null = null;
 
@@ -244,107 +405,304 @@ function fmtHz(n: number): string {
   return `${n >= 0 ? "+" : ""}${n}Hz`;
 }
 
-// 预设方案 — 通过 rate/pitch/volume 组合模拟不同发音风格
+// 预设方案
 interface Preset {
   name: string;
   icon: string;
   desc: string;
   voice: "male" | "female";
+  voiceName: string;
   rate: number;
   pitch: number;
   volume: number;
+  sentenceBreak: number;
+  clauseBreak: number;
+  lowFreqNoise: number;
+  warmth: number;
 }
 
 const presets: Preset[] = [
   {
     name: "CET-6 标准男声",
     icon: "🎓",
-    desc: "接近考试播音员",
+    desc: "2025年六级真题音频校准",
     voice: "male",
+    voiceName: "en-US-GuyNeural",
+    rate: -10,
+    pitch: -4,
+    volume: 3,
+    sentenceBreak: 650,
+    clauseBreak: 280,
+    lowFreqNoise: 12,
+    warmth: 40,
+  },
+  {
+    name: "CET-6 短对话",
+    icon: "🗨️",
+    desc: "Section A 对话语速",
+    voice: "male",
+    voiceName: "en-US-GuyNeural",
+    rate: -5,
+    pitch: -3,
+    volume: 3,
+    sentenceBreak: 500,
+    clauseBreak: 180,
+    lowFreqNoise: 10,
+    warmth: 35,
+  },
+  {
+    name: "CET-6 长篇章",
+    icon: "📝",
+    desc: "Section B/C 文章朗读",
+    voice: "male",
+    voiceName: "en-US-GuyNeural",
+    rate: -10,
+    pitch: -4,
+    volume: 3,
+    sentenceBreak: 650,
+    clauseBreak: 280,
+    lowFreqNoise: 12,
+    warmth: 40,
+  },
+  {
+    name: "CET-6 讲座",
+    icon: "🎤",
+    desc: "Section C 学术讲座",
+    voice: "male",
+    voiceName: "en-US-GuyNeural",
     rate: -8,
-    pitch: 32,
-    volume: 5,
+    pitch: -5,
+    volume: 3,
+    sentenceBreak: 600,
+    clauseBreak: 250,
+    lowFreqNoise: 15,
+    warmth: 42,
   },
   {
     name: "CET-6 标准女声",
     icon: "🎓",
     desc: "清晰标准女声",
     voice: "female",
-    rate: -8,
+    voiceName: "en-US-JennyNeural",
+    rate: -10,
     pitch: 0,
     volume: 5,
+    sentenceBreak: 500,
+    clauseBreak: 200,
+    lowFreqNoise: 10,
+    warmth: 20,
   },
   {
     name: "慢速精听",
     icon: "🐢",
     desc: "辅音清晰，适合精听",
     voice: "male",
+    voiceName: "en-US-AndrewNeural",
     rate: -30,
     pitch: -3,
     volume: 10,
+    sentenceBreak: 800,
+    clauseBreak: 400,
+    lowFreqNoise: 5,
+    warmth: 15,
   },
-  { name: "日常对话", icon: "🗣️", desc: "自然语速", voice: "male", rate: 0, pitch: 0, volume: 0 },
+  {
+    name: "日常对话",
+    icon: "🗣️",
+    desc: "自然母语语速",
+    voice: "male",
+    voiceName: "en-US-DavisNeural",
+    rate: 0,
+    pitch: 0,
+    volume: 0,
+    sentenceBreak: 400,
+    clauseBreak: 120,
+    lowFreqNoise: 0,
+    warmth: 10,
+  },
   {
     name: "快速跟读",
     icon: "⚡",
-    desc: "连读弱读效果",
+    desc: "连读弱读训练",
     voice: "male",
+    voiceName: "en-US-GuyNeural",
     rate: 15,
     pitch: 0,
     volume: 0,
+    sentenceBreak: 300,
+    clauseBreak: 75,
+    lowFreqNoise: 0,
+    warmth: 5,
   },
   {
-    name: "低沉浑厚",
-    icon: "🎵",
-    desc: "播音员气质",
+    name: "沉稳播报",
+    icon: "📺",
+    desc: "新闻播报风格",
     voice: "male",
-    rate: -10,
-    pitch: -20,
-    volume: 5,
+    voiceName: "en-US-ChristopherNeural",
+    rate: -8,
+    pitch: -10,
+    volume: 8,
+    sentenceBreak: 600,
+    clauseBreak: 250,
+    lowFreqNoise: 10,
+    warmth: 50,
   },
   {
     name: "清晰朗读",
     icon: "📖",
     desc: "每字清晰可辨",
     voice: "male",
-    rate: -12,
-    pitch: -2,
+    voiceName: "en-US-BrianNeural",
+    rate: -15,
+    pitch: 0,
     volume: 8,
-  },
-  {
-    name: "连读训练",
-    icon: "🔗",
-    desc: "略快，弱读自然",
-    voice: "male",
-    rate: 5,
-    pitch: -2,
-    volume: 0,
-  },
-  {
-    name: "高亢明亮",
-    icon: "☀️",
-    desc: "音调偏高",
-    voice: "female",
-    rate: 0,
-    pitch: 15,
-    volume: 0,
-  },
-  {
-    name: "沉稳新闻",
-    icon: "📺",
-    desc: "新闻播报感",
-    voice: "male",
-    rate: -5,
-    pitch: -10,
-    volume: 8,
+    sentenceBreak: 650,
+    clauseBreak: 350,
+    lowFreqNoise: 0,
+    warmth: 10,
   },
 ];
 
 function applyPreset(preset: Preset) {
   voice.value = preset.voice;
+  voiceName.value = preset.voiceName;
   rate.value = preset.rate;
   pitch.value = preset.pitch;
   volume.value = preset.volume;
+  sentenceBreak.value = preset.sentenceBreak;
+  clauseBreak.value = preset.clauseBreak;
+  lowFreqNoise.value = preset.lowFreqNoise;
+  warmth.value = preset.warmth;
+}
+
+/**
+ * 生成低频棕色噪声 buffer (模拟考场/广播环境底噪)
+ * 棕色噪声比白噪声更低沉自然，接近真实录音环境
+ */
+function createBrownNoiseBuffer(ctx: AudioContext, duration: number): AudioBuffer {
+  const sampleRate = ctx.sampleRate;
+  const bufferSize = sampleRate * duration;
+  const buffer = ctx.createBuffer(1, bufferSize, sampleRate);
+  const data = buffer.getChannelData(0);
+  let lastOut = 0;
+  for (let i = 0; i < bufferSize; i++) {
+    const white = Math.random() * 2 - 1;
+    // 棕色噪声: 积分白噪声，低频为主
+    lastOut = (lastOut + 0.02 * white) / 1.02;
+    data[i] = lastOut * 3.5;
+  }
+  return buffer;
+}
+
+/**
+ * 启动低频噪声层 (Web Audio API)
+ */
+function startNoise(duration: number) {
+  if (lowFreqNoise.value <= 0) return;
+
+  audioCtx = audioCtx || new AudioContext();
+  const ctx = audioCtx;
+
+  // 棕色噪声源
+  const noiseBuffer = createBrownNoiseBuffer(ctx, Math.max(duration, 30));
+  noiseSource = ctx.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+
+  // 低通滤波 — 只保留低频 (< 300Hz)，更像考场底噪
+  const lpFilter = ctx.createBiquadFilter();
+  lpFilter.type = "lowpass";
+  lpFilter.frequency.value = 250;
+  lpFilter.Q.value = 0.7;
+
+  // 音量控制: lowFreqNoise 0~60 → gain 0~0.06
+  noiseGain = ctx.createGain();
+  noiseGain.gain.value = lowFreqNoise.value * 0.001;
+
+  noiseSource.connect(lpFilter);
+  lpFilter.connect(noiseGain);
+  noiseGain.connect(ctx.destination);
+  noiseSource.start();
+}
+
+/**
+ * 停止噪声层
+ */
+function stopNoise() {
+  if (noiseSource) {
+    try {
+      noiseSource.stop();
+    } catch {}
+    noiseSource.disconnect();
+    noiseSource = null;
+  }
+  if (noiseGain) {
+    noiseGain.disconnect();
+    noiseGain = null;
+  }
+}
+
+/**
+ * 通过 Web Audio API 播放，加暖声滤波效果
+ */
+async function playWithAudioProcessing(url: string) {
+  audioCtx = audioCtx || new AudioContext();
+  const ctx = audioCtx;
+
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+  const source = ctx.createBufferSource();
+  source.buffer = audioBuffer;
+
+  let lastNode: AudioNode = source;
+
+  // 暖声滤波: 轻微低通 + 高频衰减，模拟广播/磁带质感
+  if (warmth.value > 0) {
+    // 低通截止: warmth 0~100 → 频率 20000Hz ~ 3000Hz
+    const cutoff = 20000 - warmth.value * 170;
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = "lowpass";
+    lpf.frequency.value = cutoff;
+    lpf.Q.value = 0.5;
+    lastNode.connect(lpf);
+    lastNode = lpf;
+
+    // 低频轻微提升 (更温暖)
+    if (warmth.value > 30) {
+      const bass = ctx.createBiquadFilter();
+      bass.type = "lowshelf";
+      bass.frequency.value = 200;
+      bass.gain.value = warmth.value * 0.06; // 最多 +6dB
+      lastNode.connect(bass);
+      lastNode = bass;
+    }
+  }
+
+  lastNode.connect(ctx.destination);
+
+  // 启动低频噪声层
+  startNoise(audioBuffer.duration);
+
+  source.onended = () => {
+    isPlaying.value = false;
+    stopNoise();
+    source.disconnect();
+  };
+
+  source.start();
+  isPlaying.value = false;
+
+  // 保存引用以便停止
+  audioEl = {
+    pause: () => {
+      source.stop();
+      stopNoise();
+    },
+    currentTime: 0,
+  } as any;
 }
 
 function handlePlay() {
@@ -354,11 +712,23 @@ function handlePlay() {
 
   const url = buildTtsUrl(text.value, {
     voice: voice.value,
+    voiceName: voiceName.value,
     rate: fmtPct(rate.value),
     pitch: fmtHz(pitch.value),
     volume: fmtPct(volume.value),
+    sentenceBreak: `${sentenceBreak.value}ms`,
+    clauseBreak: `${clauseBreak.value}ms`,
   });
 
+  // 需要音频后处理时用 Web Audio API
+  if (lowFreqNoise.value > 0 || warmth.value > 0) {
+    playWithAudioProcessing(url).catch(() => {
+      isPlaying.value = false;
+    });
+    return;
+  }
+
+  // 无后处理时用普通 Audio 元素
   audioEl = new Audio(url);
   audioEl.oncanplaythrough = () => {
     isPlaying.value = false;
@@ -374,6 +744,7 @@ function handlePlay() {
 }
 
 function handleStop() {
+  stopNoise();
   if (audioEl) {
     audioEl.pause();
     audioEl.currentTime = 0;
@@ -385,9 +756,14 @@ function handleStop() {
 function handleReset() {
   handleStop();
   voice.value = "male";
-  rate.value = -8;
-  pitch.value = 32;
-  volume.value = 5;
+  voiceName.value = "en-US-GuyNeural";
+  rate.value = -10;
+  pitch.value = -4;
+  volume.value = 3;
+  sentenceBreak.value = 650;
+  clauseBreak.value = 280;
+  lowFreqNoise.value = 12;
+  warmth.value = 40;
 }
 
 function handleSave() {
@@ -401,6 +777,12 @@ function handleSave() {
     styleDegree: "1.0",
     emphasis: "",
     contour: "",
+    naturalPause: true,
+    sentenceBreak: `${sentenceBreak.value}ms`,
+    clauseBreak: `${clauseBreak.value}ms`,
+    lowFreqNoise: lowFreqNoise.value,
+    warmth: warmth.value,
+    voiceName: voiceName.value,
   });
   saved.value = true;
   setTimeout(() => {
@@ -462,6 +844,34 @@ function handleSave() {
 .tts-radio-btn--active {
   @apply border-purple-500 bg-purple-50 text-purple-700;
   @apply dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300;
+}
+
+/* 声音模型选择 */
+.tts-voice-grid {
+  @apply grid grid-cols-2 gap-2;
+}
+@media (min-width: 640px) {
+  .tts-voice-grid {
+    @apply grid-cols-3;
+  }
+}
+.tts-voice-btn {
+  @apply flex flex-col items-center gap-0.5 rounded-xl border-2 border-gray-200 px-3 py-2.5 text-xs transition-all;
+  @apply hover:border-purple-300 hover:bg-purple-50;
+  @apply dark:border-gray-600 dark:hover:border-purple-500 dark:hover:bg-purple-900/20;
+}
+.tts-voice-btn--active {
+  @apply border-purple-500 bg-purple-50 text-purple-700;
+  @apply dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300;
+}
+.tts-voice-btn-name {
+  @apply text-sm font-semibold text-gray-700 dark:text-gray-300;
+}
+.tts-voice-btn--active .tts-voice-btn-name {
+  @apply text-purple-700 dark:text-purple-300;
+}
+.tts-voice-btn-desc {
+  @apply text-xs text-gray-400;
 }
 
 /* 滑块 */

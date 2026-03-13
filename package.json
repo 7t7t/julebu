@@ -61,5 +61,10 @@
   "dependencies": {
     "@t3-oss/env-core": "^0.7.1",
     "zod": "^3.22.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "consola": "^3.2.3"
+    }
   }
 }
