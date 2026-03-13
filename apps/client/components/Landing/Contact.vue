@@ -70,7 +70,7 @@
             <ul class="mt-6 space-y-4 text-sm">
               <li>
                 <a
-                  href="https://github.com/cuixueshe/earthworm"
+                  href="https://github.com/7t7t/julebu"
                   class="hover:opacity-80"
                 >
                   开源
@@ -79,7 +79,7 @@
 
               <li>
                 <a
-                  href="https://github.com/cuixueshe/earthworm/issues"
+                  href="https://github.com/7t7t/julebu/issues"
                   class="hover:opacity-80"
                 >
                   问题
@@ -88,7 +88,7 @@
 
               <li>
                 <a
-                  href="https://github.com/cuixueshe/earthworm/issues/91"
+                  href="https://github.com/7t7t/julebu/issues"
                   class="hover:opacity-80"
                 >
                   贡献代码

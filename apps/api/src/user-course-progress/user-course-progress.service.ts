@@ -35,7 +35,7 @@ export class UserCourseProgressService {
       .where(eq(userCourseProgress.userId, userId))
       .orderBy(desc(userCourseProgress.updatedAt))
       .limit(limit)
-      .leftJoin(coursePack, eq(userCourseProgress.coursePackId, coursePack.id));
+      .innerJoin(coursePack, eq(userCourseProgress.coursePackId, coursePack.id));
 
     return userCourseProgressResult;
   }

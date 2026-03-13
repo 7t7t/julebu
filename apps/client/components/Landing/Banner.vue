@@ -45,7 +45,7 @@
         </div>
       </button>
       <a
-        href="https://github.com/cuixueshe/earthworm"
+        href="https://github.com/7t7t/julebu"
         rel="noreferrer noopener"
         target="_blank"
         class="group relative inline-flex h-12 cursor-pointer items-center justify-center overflow-hidden rounded-full px-6 duration-500"

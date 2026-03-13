@@ -157,6 +157,11 @@ function getWordsClassNames(index: number) {
     return `word-error ${isFixMode() && "animate-shake"}`;
   }
 
+  // 实时校验正确（绿色）
+  if (word.correct && focusing.value) {
+    return "word-correct";
+  }
+
   // 默认样式
   return "word-default";
 }
@@ -254,6 +259,12 @@ function preventCursorMove(event: MouseEvent) {
   @apply text-red-500;
   border-bottom-color: #ef4444;
   background: linear-gradient(to top, rgba(239, 68, 68, 0.06), transparent);
+}
+
+.word-correct {
+  @apply text-emerald-500;
+  border-bottom-color: #10b981;
+  background: linear-gradient(to top, rgba(16, 185, 129, 0.06), transparent);
 }
 
 .word-default {

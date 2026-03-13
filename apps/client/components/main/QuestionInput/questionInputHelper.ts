@@ -6,7 +6,13 @@ const focusing = ref(true);
 export function useQuestionInput() {
   function focusInput() {
     focusing.value = true;
+    // 记录 focus 前的光标位置，防止 focus() 把光标跳到末尾
+    const savedPos = inputEl.value?.selectionStart ?? null;
     inputEl.value?.focus();
+    // 恢复光标位置
+    if (savedPos !== null && inputEl.value) {
+      inputEl.value.setSelectionRange(savedPos, savedPos);
+    }
   }
 
   function blurInput() {

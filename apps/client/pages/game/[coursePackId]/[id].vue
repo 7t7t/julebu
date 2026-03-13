@@ -5,7 +5,10 @@
     </template>
     <template v-else>
       <MainTool />
-      <div class="game-content">
+      <div
+        class="game-content"
+        @click="handleContentClick"
+      >
         <MainGame />
       </div>
     </template>
@@ -17,6 +20,7 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
 
+import { useQuestionInput } from "~/components/main/QuestionInput/questionInputHelper";
 import { useGameMode } from "~/composables/main/game";
 import { useNavigation } from "~/composables/useNavigation";
 import { isAuthenticated } from "~/services/auth";
@@ -31,6 +35,16 @@ const courseStore = useCourseStore();
 const masteredElementsStore = useMasteredElementsStore();
 const { gotoCourseList } = useNavigation();
 const { showQuestion } = useGameMode();
+const { focusInput } = useQuestionInput();
+
+const interactiveTags = new Set(["BUTTON", "A", "INPUT", "TEXTAREA", "SELECT", "LABEL"]);
+
+function handleContentClick(e: MouseEvent) {
+  const target = e.target as HTMLElement;
+  if (target.closest("button, a, input, textarea, select, label, [role='button']")) return;
+  if (interactiveTags.has(target.tagName)) return;
+  focusInput();
+}
 
 showQuestion();
 

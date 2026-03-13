@@ -7,6 +7,7 @@ interface Word {
   isActive: boolean;
   userInput: string;
   incorrect: boolean;
+  correct: boolean; // 实时校验：输入正确
   end: number;
   start: number;
   position: number;
@@ -62,9 +63,36 @@ export function useInput({
 
   function setInputValue(val: string) {
     inputValue.value = val;
+
+    // Fix_Input 模式：只更新当前编辑的错误单词，不动其他单词
+    if (mode.value === Mode.Fix_Input && currentEditWord) {
+      syncCurrentEditWordFromInput();
+      return;
+    }
+
     resetAllWordUserInput();
     inputSyncUserInputWords();
     updateActiveWord(val ? getInputCursorPosition() : 0);
+  }
+
+  /**
+   * Fix_Input 模式下，从 inputValue 中提取当前编辑单词的内容
+   * 只更新 currentEditWord，其他单词保持不变
+   */
+  function syncCurrentEditWordFromInput() {
+    const wordIndex = userInputWords.indexOf(currentEditWord);
+    if (wordIndex < 0) return;
+
+    const parts = inputValue.value.split(separator);
+
+    // 安全提取当前单词部分（去除可能混入的空格）
+    if (wordIndex < parts.length) {
+      currentEditWord.userInput = parts[wordIndex];
+    }
+
+    // 重算所有单词位置
+    recalculateWordPositions();
+    updateActiveWord(currentEditWord.end);
   }
 
   function createWord(word: string, id: number) {
@@ -73,6 +101,7 @@ export function useInput({
       isActive: false,
       userInput: "",
       incorrect: false,
+      correct: false,
       start: 0,
       end: 0,
       position: 0,
@@ -107,16 +136,28 @@ export function useInput({
   }
 
   function inputSyncUserInputWords() {
+    const parts = inputValue.value.split(separator);
     let position = 0;
 
-    inputValue.value.split(separator).forEach((input, index) => {
-      userInputWords[index].userInput = input;
+    for (let i = 0; i < userInputWords.length; i++) {
+      const input = i < parts.length ? parts[i] : "";
+      userInputWords[i].userInput = input;
+      userInputWords[i].start = position;
+      userInputWords[i].end = position + input.length;
+      position += input.length + 1;
+    }
+  }
 
-      userInputWords[index].start = position;
-      userInputWords[index].end = position + input.length;
-
-      position += input.length + 1; // Add 1 for the space after each word
-    });
+  /**
+   * 重算所有单词的 start/end 位置（基于当前 userInput 值）
+   */
+  function recalculateWordPositions() {
+    let position = 0;
+    for (const word of userInputWords) {
+      word.start = position;
+      word.end = position + word.userInput.length;
+      position += word.userInput.length + 1;
+    }
   }
 
   function resetAllWordUserInput() {
@@ -132,14 +173,51 @@ export function useInput({
   }
 
   function updateActiveWord(position: number) {
+    const previousActiveWord = userInputWords.find((w) => w.isActive);
     resetAllWordActive();
 
+    let newActiveWord: Word | undefined;
     for (let i = 0; i < userInputWords.length; i++) {
       const word = userInputWords[i];
       if (position >= word.start && position <= word.end) {
         word.isActive = true;
+        newActiveWord = word;
         break;
       }
+    }
+
+    // 活跃单词切换时，对已输入的非活跃单词做实时校验
+    if (previousActiveWord && newActiveWord && previousActiveWord !== newActiveWord) {
+      validateTypedWords();
+    }
+  }
+
+  /**
+   * 实时校验：对所有已输入且非活跃的单词做正确/错误标记
+   * 只在 Input 模式下生效（Fix 模式用 markIncorrectWord）
+   */
+  function validateTypedWords() {
+    if (mode.value !== Mode.Input) return;
+
+    for (const word of userInputWords) {
+      if (word.isActive) {
+        // 当前正在编辑的单词不校验
+        word.incorrect = false;
+        word.correct = false;
+        continue;
+      }
+
+      if (!word.userInput) {
+        // 还没输入的不校验
+        word.incorrect = false;
+        word.correct = false;
+        continue;
+      }
+
+      const formatted = formatInputText(word.userInput);
+      const isCorrect = formatted === word.text.toLocaleLowerCase();
+      word.correct = isCorrect;
+      word.incorrect = !isCorrect;
     }
   }
 
@@ -163,8 +241,10 @@ export function useInput({
 
       if (formattedWord !== word.text.toLocaleLowerCase()) {
         word.incorrect = true;
+        word.correct = false;
       } else {
         word.incorrect = false;
+        word.correct = true;
       }
     });
   }
@@ -216,6 +296,14 @@ export function useInput({
 
   function submitAnswer(correctCallback?: () => void, wrongCallback?: () => void) {
     if (mode.value === Mode.Fix) return;
+
+    // 提交前：确保 inputValue 与 userInputWords 数据一致
+    if (mode.value === Mode.Fix_Input) {
+      // 从 userInputWords 重建 inputValue（修正空格结构）
+      userInputWordsSyncInput();
+      recalculateWordPositions();
+    }
+
     resetAllWordActive();
     markIncorrectWord();
 
@@ -302,11 +390,29 @@ export function useInput({
     };
   }
 
+  /**
+   * Fix_Input 模式下，确保光标在当前编辑单词范围内
+   * 如果光标跑偏（比如 focus 后跳到末尾），强制修正
+   */
+  function ensureCursorInCurrentWord() {
+    if (mode.value !== Mode.Fix_Input || !currentEditWord) return;
+
+    const cursorPos = getInputCursorPosition();
+    if (cursorPos < currentEditWord.start || cursorPos > currentEditWord.end) {
+      setInputCursorPosition(currentEditWord.end);
+    }
+  }
+
   function handleKeyboardInput(e: KeyboardEvent, options?: KeyboardInputOptions) {
     // 禁止方向键移动
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
       e.preventDefault();
       return;
+    }
+
+    // Fix_Input 模式下，每次按键前先确保光标位置正确
+    if (mode.value === Mode.Fix_Input) {
+      ensureCursorInCurrentWord();
     }
 
     // Fix_Input/Input 下启用空格提交 且 在最后一个单词位置
@@ -336,12 +442,23 @@ export function useInput({
       return;
     }
 
-    // Fix_Input 模式下当前编辑单词为空时，启用退格删除上一个错误单词
-    if (mode.value === Mode.Fix_Input && e.code === "Backspace" && isEmptyOfCurrentEditWord()) {
-      e.preventDefault();
-      activePreviousIncorrectWord();
-      inputChangedCallback?.(e);
-      return;
+    // Fix_Input 模式下退格键约束：
+    // 1. 当前单词为空 → 回退到上一个错误单词
+    // 2. 光标在当前单词起始位置 → 阻止删除（防止删到前面单词的空格）
+    if (mode.value === Mode.Fix_Input && e.code === "Backspace") {
+      if (isEmptyOfCurrentEditWord()) {
+        e.preventDefault();
+        activePreviousIncorrectWord();
+        inputChangedCallback?.(e);
+        return;
+      }
+
+      const cursorPos = getInputCursorPosition();
+      if (cursorPos <= currentEditWord.start) {
+        e.preventDefault();
+        inputChangedCallback?.(e);
+        return;
+      }
     }
 
     // 空格修复单词

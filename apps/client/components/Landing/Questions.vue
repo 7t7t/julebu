@@ -61,14 +61,14 @@ const QUESTIONS = [
     ],
   },
   {
-    title: "如何为 Earthworm 贡献代码？",
+    title: "如何为 Alrahim 贡献代码？",
     content: [
       "我们提供了完整的贡献代码指南，可以先读一读(页脚处有链接)",
       "去 github/issues 逛一逛， 也可以基于你在使用中遇到的问题提一个 issue 并且自己尝试修复",
     ],
   },
   {
-    title: "Earthworm 项目是完全免费的吗？",
+    title: "Alrahim 项目是完全免费的吗？",
     content: [
       "不完全免费，因为想要长久发展收费是必然的。未来会采用订阅模式，为会员提供更多的学习内容和功能",
     ],
