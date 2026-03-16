@@ -2,6 +2,9 @@
 # Alrahim 生产环境部署脚本
 set -e
 
+NGINX_CONF="/usr/local/nginx/conf/nginx.conf"
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 echo "===== Alrahim 生产环境部署 ====="
 
 # 检查 Node 版本
@@ -18,27 +21,34 @@ if ! command -v pnpm &> /dev/null; then
 fi
 
 # 1. 安装依赖
-echo "[1/6] 安装依赖..."
+echo "[1/7] 安装依赖..."
 pnpm install --frozen-lockfile
 
 # 2. 构建 schema
-echo "[2/6] 构建 schema..."
+echo "[2/7] 构建 schema..."
 pnpm schema:build
 
 # 3. 初始化数据库
-echo "[3/6] 初始化数据库..."
+echo "[3/7] 初始化数据库..."
 NODE_ENV=prod pnpm db:init
 
 # 4. 构建后端
-echo "[4/6] 构建后端..."
+echo "[4/7] 构建后端..."
 pnpm build:server
 
 # 5. 构建前端（静态生成）
-echo "[5/6] 构建前端..."
+echo "[5/7] 构建前端..."
 pnpm build:client
 
-# 6. 启动/重启 API 服务
-echo "[6/6] 启动 API 服务..."
+# 6. 更新 Nginx 配置
+echo "[6/7] 更新 Nginx 配置..."
+cp "$PROJECT_DIR/nginx.conf" "$NGINX_CONF"
+/usr/local/nginx/sbin/nginx -t
+/usr/local/nginx/sbin/nginx -s reload
+echo "Nginx 配置已更新并重载"
+
+# 7. 启动/重启 API 服务
+echo "[7/7] 启动 API 服务..."
 cd apps/api
 if pm2 describe alrahim_api > /dev/null 2>&1; then
   echo "重启 API 服务..."
@@ -52,8 +62,9 @@ cd ../..
 
 echo ""
 echo "===== 部署完成 ====="
-echo "前端静态文件: apps/client/.output/public/"
-echo "请将前端文件部署到 Nginx 的 root 目录"
+echo "前端站点: https://cet.vralph.top"
+echo "API 服务: https://cet-api.vralph.top"
+echo "认证服务: https://cet-auth.vralph.top"
 echo ""
 echo "检查 API 状态: pm2 status"
 echo "查看 API 日志: pm2 logs alrahim_api"
