@@ -10,6 +10,17 @@ echo "===== Alrahim 生产环境部署 ====="
 # 设置生产环境变量（所有后续命令生效）
 export NODE_ENV=prod
 
+# 加载 .env.prod 环境变量
+ENV_PROD="$PROJECT_DIR/apps/api/.env.prod"
+if [ ! -f "$ENV_PROD" ]; then
+  echo "错误: 未找到 $ENV_PROD，请先创建生产环境配置文件"
+  exit 1
+fi
+set -a
+source "$ENV_PROD"
+set +a
+echo "已加载环境变量: DATABASE_URL=${DATABASE_URL:0:30}..."
+
 # 检查 Node 版本
 NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
 if [ "$NODE_VERSION" -lt 20 ]; then
