@@ -1,0 +1,15 @@
+[
+  {"chinese": "推断", "english": "infer", "soundmark": "/ɪnˈfɜːr/"},
+  {"chinese": "暗示", "english": "imply", "soundmark": "/ɪmˈplaɪ/"},
+  {"chinese": "建议；暗示", "english": "suggest", "soundmark": "/səˈdʒest/"},
+  {"chinese": "推理题的正确答案是原文最直接的同义改写", "english": "The correct answer to an inference question is the most direct paraphrase of the original text", "soundmark": "/ðə kəˈrekt ˈɑːnsər tuː ən ˈɪnfərəns ˈkwestʃən ɪz ðə moʊst dəˈrekt ˈpærəfreɪz ɒv ðə əˈrɪdʒɪnəl tekst/"},
+  {"chinese": "过度推断主观评价常识干扰都是错误选项", "english": "Over inference subjective evaluation and common sense interference are all wrong options", "soundmark": "/ˈoʊvər ˈɪnfərəns səbˈdʒektɪv ɪˌvæljuˈeɪʃən ænd ˈkɒmən sens ˌɪntərˈfɪərəns ɑːr ɔːl rɒŋ ˈɒpʃənz/"},
+  {"chinese": "积极的", "english": "positive", "soundmark": "/ˈpɒzɪtɪv/"},
+  {"chinese": "消极的", "english": "negative", "soundmark": "/ˈneɡətɪv/"},
+  {"chinese": "中立的", "english": "neutral", "soundmark": "/ˈnjuːtrəl/"},
+  {"chinese": "批判的", "english": "critical", "soundmark": "/ˈkrɪtɪkəl/"},
+  {"chinese": "支持的", "english": "supportive", "soundmark": "/səˈpɔːrtɪv/"},
+  {"chinese": "关注的；担忧的", "english": "concerned", "soundmark": "/kənˈsɜːrnd/"},
+  {"chinese": "态度题答案常在转折词之后和结尾段", "english": "Attitude answers often appear after transition words and in the concluding paragraph", "soundmark": "/ˈætɪtjuːd ˈɑːnsərz ˈɒfən əˈpɪər ˈɑːftər trænˈzɪʃən wɜːrdz ænd ɪn ðə kənˈkluːdɪŋ ˈpærəɡrɑːf/"},
+  {"chinese": "词义题答案一定在上下文本句前后找同义或反义", "english": "Vocabulary question answers are always in the context look for synonyms or antonyms before and after the sentence", "soundmark": "/voʊˈkæbjələri ˈkwestʃən ˈɑːnsərz ɑːr ˈɔːlweɪz ɪn ðə ˈkɒntekst lʊk fɔːr ˈsɪnənɪmz ɔːr ˈæntənɪmz bɪˈfɔːr ænd ˈɑːftər ðə ˈsentəns/"}
+]

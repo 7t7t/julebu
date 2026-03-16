@@ -1,0 +1,13 @@
+[
+  {"chinese": "会议室", "english": "conference room", "soundmark": "/ˈkɒnfərəns ruːm/"},
+  {"chinese": "预订", "english": "booking", "soundmark": "/ˈbʊkɪŋ/"},
+  {"chinese": "矛盾的信息", "english": "conflicting information", "soundmark": "/kənˈflɪktɪŋ ˌɪnfərˈmeɪʃən/"},
+  {"chinese": "海外", "english": "overseas", "soundmark": "/ˌoʊvərˈsiːz/"},
+  {"chinese": "感激", "english": "appreciate", "soundmark": "/əˈpriːʃieɪt/"},
+  {"chinese": "尽快", "english": "as soon as possible", "soundmark": "/æz suːn æz ˈpɒsɪbəl/"},
+  {"chinese": "我打电话询问下周五会议室的预订", "english": "I'm calling to ask about the conference room booking for next Friday", "soundmark": "/aɪm ˈkɔːlɪŋ tuː ɑːsk əˈbaʊt ðə ˈkɒnfərəns ruːm ˈbʊkɪŋ fɔːr nekst ˈfraɪdeɪ/"},
+  {"chinese": "有人告诉我它是可用的但现在我得到了矛盾的信息", "english": "I was told it was available but now I'm getting conflicting information", "soundmark": "/aɪ wɒz toʊld ɪt wɒz əˈveɪləbəl bʌt naʊ aɪm ˈɡetɪŋ kənˈflɪktɪŋ ˌɪnfərˈmeɪʃən/"},
+  {"chinese": "问题是我们有一个客户从海外来访我们真的需要那个场地", "english": "The problem is we have a client visiting from overseas and we really need that space", "soundmark": "/ðə ˈprɒbləm ɪz wiː hæv ə ˈklaɪənt ˈvɪzɪtɪŋ frɒm ˌoʊvərˈsiːz ænd wiː ˈrɪəli niːd ðæt speɪs/"},
+  {"chinese": "您能否再核实一下看看是不是搞错了", "english": "Is there any way you could check again and see if there's been a mistake", "soundmark": "/ɪz ðeər ˈeni weɪ juː kʊd tʃek əˈɡen ænd siː ɪf ðeərz biːn ə mɪˈsteɪk/"},
+  {"chinese": "如果您能尽快回复我我将非常感激", "english": "I would appreciate it if you could get back to me as soon as possible", "soundmark": "/aɪ wʊd əˈpriːʃieɪt ɪt ɪf juː kʊd ɡet bæk tuː miː æz suːn æz ˈpɒsɪbəl/"}
+]

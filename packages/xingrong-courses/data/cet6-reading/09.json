@@ -1,0 +1,15 @@
+[
+  {"chinese": "语气委婉的选项更可能正确", "english": "Options with a moderate tone are more likely to be correct", "soundmark": "/ˈɒpʃənz wɪð ə ˈmɒdərət toʊn ɑːr mɔːr ˈlaɪkli tuː biː kəˈrekt/"},
+  {"chinese": "可能", "english": "may", "soundmark": "/meɪ/"},
+  {"chinese": "可能（更不确定）", "english": "might", "soundmark": "/maɪt/"},
+  {"chinese": "不一定", "english": "not necessarily", "soundmark": "/nɒt ˈnesəserɪli/"},
+  {"chinese": "绝对词出现百分之九十九是错误选项", "english": "Absolute words appear in ninety nine percent of wrong options", "soundmark": "/ˈæbsəluːt wɜːrdz əˈpɪər ɪn ˈnaɪnti naɪn pərˈsent ɒv rɒŋ ˈɒpʃənz/"},
+  {"chinese": "必须（绝对词）", "english": "must", "soundmark": "/mʌst/"},
+  {"chinese": "从不（绝对词）", "english": "never", "soundmark": "/ˈnevər/"},
+  {"chinese": "总是（绝对词）", "english": "always", "soundmark": "/ˈɔːlweɪz/"},
+  {"chinese": "仅仅（绝对词）", "english": "only", "soundmark": "/ˈoʊnli/"},
+  {"chinese": "完全地（绝对词）", "english": "entirely", "soundmark": "/ɪnˈtaɪərli/"},
+  {"chinese": "完全地", "english": "completely", "soundmark": "/kəmˈpliːtli/"},
+  {"chinese": "原文没有明确比较选项出现比较级就是错的", "english": "If the original text has no explicit comparison an option with a comparative is wrong", "soundmark": "/ɪf ðə əˈrɪdʒɪnəl tekst hæz noʊ ɪkˈsplɪsɪt kəmˈpærɪsən ən ˈɒpʃən wɪð ə kəmˈpærətɪv ɪz rɒŋ/"},
+  {"chinese": "无中生有原文没提常识对也算错", "english": "If the original text does not mention it then it is wrong even if common sense agrees", "soundmark": "/ɪf ðə əˈrɪdʒɪnəl tekst dʌz nɒt ˈmenʃən ɪt ðen ɪt ɪz rɒŋ ˈiːvən ɪf ˈkɒmən sens əˈɡriːz/"}
+]

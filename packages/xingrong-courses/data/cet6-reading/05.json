@@ -1,0 +1,17 @@
+[
+  {"chinese": "认为", "english": "think", "soundmark": "/θɪŋk/"},
+  {"chinese": "认为（正式）", "english": "argue", "soundmark": "/ˈɑːrɡjuː/"},
+  {"chinese": "声称", "english": "claim", "soundmark": "/kleɪm/"},
+  {"chinese": "建议；暗示", "english": "suggest", "soundmark": "/səˈdʒest/"},
+  {"chinese": "坚持认为", "english": "maintain", "soundmark": "/meɪnˈteɪn/"},
+  {"chinese": "坚持", "english": "insist", "soundmark": "/ɪnˈsɪst/"},
+  {"chinese": "强调", "english": "stress", "soundmark": "/stres/"},
+  {"chinese": "强调（同义替换）", "english": "emphasize", "soundmark": "/ˈemfəsaɪz/"},
+  {"chinese": "突出", "english": "highlight", "soundmark": "/ˈhaɪlaɪt/"},
+  {"chinese": "强调（正式）", "english": "underline", "soundmark": "/ˌʌndərˈlaɪn/"},
+  {"chinese": "导致", "english": "cause", "soundmark": "/kɔːz/"},
+  {"chinese": "导致（同义替换）", "english": "lead to", "soundmark": "/liːd tuː/"},
+  {"chinese": "导致（结果）", "english": "result in", "soundmark": "/rɪˈzʌlt ɪn/"},
+  {"chinese": "促成", "english": "contribute to", "soundmark": "/kənˈtrɪbjuːt tuː/"},
+  {"chinese": "带来", "english": "bring about", "soundmark": "/brɪŋ əˈbaʊt/"}
+]

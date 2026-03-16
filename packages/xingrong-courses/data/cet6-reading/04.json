@@ -1,0 +1,21 @@
+[
+  {"chinese": "但是（转折信号词）", "english": "but", "soundmark": "/bʌt/"},
+  {"chinese": "然而", "english": "however", "soundmark": "/haʊˈevər/"},
+  {"chinese": "然而（正式）", "english": "nevertheless", "soundmark": "/ˌnevərðəˈles/"},
+  {"chinese": "尽管；然而", "english": "while", "soundmark": "/waɪl/"},
+  {"chinese": "因为", "english": "because", "soundmark": "/bɪˈkɒz/"},
+  {"chinese": "既然", "english": "since", "soundmark": "/sɪns/"},
+  {"chinese": "导致", "english": "lead to", "soundmark": "/liːd tuː/"},
+  {"chinese": "导致（结果）", "english": "result in", "soundmark": "/rɪˈzʌlt ɪn/"},
+  {"chinese": "由于", "english": "due to", "soundmark": "/djuː tuː/"},
+  {"chinese": "事实上", "english": "in fact", "soundmark": "/ɪn fækt/"},
+  {"chinese": "实际上", "english": "actually", "soundmark": "/ˈæktʃuəli/"},
+  {"chinese": "也就是说", "english": "that is", "soundmark": "/ðæt ɪz/"},
+  {"chinese": "即；也就是", "english": "namely", "soundmark": "/ˈneɪmli/"},
+  {"chinese": "而不是", "english": "rather than", "soundmark": "/ˈræðər ðæn/"},
+  {"chinese": "代替", "english": "instead of", "soundmark": "/ɪnˈsted ɒv/"},
+  {"chinese": "认为；主张", "english": "argue", "soundmark": "/ˈɑːrɡjuː/"},
+  {"chinese": "声称", "english": "claim", "soundmark": "/kleɪm/"},
+  {"chinese": "指出", "english": "point out", "soundmark": "/pɔɪnt aʊt/"},
+  {"chinese": "转折词后面百分之八十是答案区", "english": "Eighty percent of the time the answer area is after a transition word", "soundmark": "/ˈeɪti pərˈsent ɒv ðə taɪm ðə ˈɑːnsər ˈeəriə ɪz ˈɑːftər ə trænˈzɪʃən wɜːrd/"}
+]

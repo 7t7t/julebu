@@ -1,0 +1,15 @@
+[
+  {"chinese": "技术人员", "english": "technician", "soundmark": "/tekˈnɪʃən/"},
+  {"chinese": "维修；维护", "english": "maintenance", "soundmark": "/ˈmeɪntənəns/"},
+  {"chinese": "被指定的", "english": "designated", "soundmark": "/ˈdezɪɡneɪtɪd/"},
+  {"chinese": "后勤", "english": "logistics", "soundmark": "/ləˈdʒɪstɪks/"},
+  {"chinese": "迅速地", "english": "promptly", "soundmark": "/ˈprɒmptli/"},
+  {"chinese": "延误", "english": "delay", "soundmark": "/dɪˈleɪ/"},
+  {"chinese": "超出我们控制的", "english": "beyond our control", "soundmark": "/bɪˈjɒnd ˈaʊər kənˈtroʊl/"},
+  {"chinese": "早上好我叫鲍勃费特曼我是电脑技术人员", "english": "Good morning my name is Bob Fetterman I'm the computer technician", "soundmark": "/ɡʊd ˈmɔːrnɪŋ maɪ neɪm ɪz bɒb ˈfetərmən aɪm ðə kəmˈpjuːtər tekˈnɪʃən/"},
+  {"chinese": "我为阿尔法维修公司工作", "english": "I work for Alpha Maintenance", "soundmark": "/aɪ wɜːrk fɔːr ˈælfə ˈmeɪntənəns/"},
+  {"chinese": "我想你们办公室有人打电话到我们总部我是被指派处理你的案例的工程师", "english": "I imagine someone from your office called our central office and I'm the engineer designated to your case", "soundmark": "/aɪ ɪˈmædʒɪn ˈsʌmwʌn frɒm jɔːr ˈɒfɪs kɔːld ˈaʊər ˈsentrəl ˈɒfɪs ænd aɪm ðə ˌendʒɪˈnɪər ˈdezɪɡneɪtɪd tuː jɔːr keɪs/"},
+  {"chinese": "抱歉但我不负责安排所有后勤工作", "english": "I'm sorry but I'm not in charge of scheduling all logistics", "soundmark": "/aɪm ˈsɒri bʌt aɪm nɒt ɪn tʃɑːrdʒ ɒv ˈʃedjuːlɪŋ ɔːl ləˈdʒɪstɪks/"},
+  {"chinese": "我只能告诉你我这周接到电话就尽快赶来了", "english": "All I can tell you is I got the call this week and came as soon as I could", "soundmark": "/ɔːl aɪ kæn tel juː ɪz aɪ ɡɒt ðə kɔːl ðɪs wiːk ænd keɪm æz suːn æz aɪ kʊd/"},
+  {"chinese": "我们尽力快速响应但有时会有超出我们控制的延误", "english": "We do our best to respond promptly but sometimes there are delays beyond our control", "soundmark": "/wiː duː ˈaʊər best tuː rɪˈspɒnd ˈprɒmptli bʌt ˈsʌmtaɪmz ðeər ɑːr dɪˈleɪz bɪˈjɒnd ˈaʊər kənˈtroʊl/"}
+]

@@ -5,6 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "upload": "tsx src/seed.ts",
+    "upload:cet6-translation": "tsx src/seed-cet6-translation.ts",
+    "upload:cet6-reading": "tsx src/seed-cet6-reading.ts",
+    "upload:cet6-listening": "tsx src/seed-cet6-listening.ts",
     "course:add": "tsx src/addCourse.ts",
     "course:reset": "tsx src/resetCourseStatements.ts",
     "pdf:parse": "tsx src/parsePDF/index.ts",

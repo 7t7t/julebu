@@ -1,0 +1,13 @@
+[
+  {"chinese": "偷换主体原文讲A选项讲B直接错", "english": "Switching subjects the original talks about A but the option talks about B it is wrong", "soundmark": "/ˈswɪtʃɪŋ ˈsʌbdʒɪkts ðə əˈrɪdʒɪnəl tɔːks əˈbaʊt eɪ bʌt ðə ˈɒpʃən tɔːks əˈbaʊt biː ɪt ɪz rɒŋ/"},
+  {"chinese": "扩大范围原文说一些选项变成全部", "english": "Expanding scope the original says some but the option changes it to all", "soundmark": "/ɪkˈspændɪŋ skoʊp ðə əˈrɪdʒɪnəl sez sʌm bʌt ðə ˈɒpʃən ˈtʃeɪndʒɪz ɪt tuː ɔːl/"},
+  {"chinese": "反向干扰把支持变成反对把增加变成减少", "english": "Reverse interference turns support into opposition and increase into decrease", "soundmark": "/rɪˈvɜːrs ˌɪntərˈfɪərəns tɜːrnz səˈpɔːrt ˈɪntuː ˌɒpəˈzɪʃən ænd ɪnˈkriːs ˈɪntuː dɪˈkriːs/"},
+  {"chinese": "拼凑原文单词都来自原文但逻辑乱拼", "english": "Piecing together words all come from the original text but the logic is jumbled", "soundmark": "/ˈpiːsɪŋ təˈɡeðər wɜːrdz ɔːl kʌm frɒm ðə əˈrɪdʒɪnəl tekst bʌt ðə ˈlɒdʒɪk ɪz ˈdʒʌmbəld/"},
+  {"chinese": "过度推理只要多推一步必定是错的", "english": "Over inference if you take one more step of reasoning it must be wrong", "soundmark": "/ˈoʊvər ˈɪnfərəns ɪf juː teɪk wʌn mɔːr step ɒv ˈriːzənɪŋ ɪt mʌst biː rɒŋ/"},
+  {"chinese": "先扫绝对词再扫比较级", "english": "First scan for absolute words then scan for comparatives", "soundmark": "/fɜːrst skæn fɔːr ˈæbsəluːt wɜːrdz ðen skæn fɔːr kəmˈpærətɪvz/"},
+  {"chinese": "看原文是否有提到没提直接删", "english": "Check whether the original text mentions it if not mentioned delete it directly", "soundmark": "/tʃek ˈweðər ðə əˈrɪdʒɪnəl tekst ˈmenʃənz ɪt ɪf nɒt ˈmenʃənd dɪˈliːt ɪt dəˈrektli/"},
+  {"chinese": "看主体是否一致不一致直接删", "english": "Check whether the subject is consistent if not delete it directly", "soundmark": "/tʃek ˈweðər ðə ˈsʌbdʒɪkt ɪz kənˈsɪstənt ɪf nɒt dɪˈliːt ɪt dəˈrektli/"},
+  {"chinese": "看方向是否相反相反直接删", "english": "Check whether the direction is opposite if opposite delete it directly", "soundmark": "/tʃek ˈweðər ðə dəˈrekʃən ɪz ˈɒpəzɪt ɪf ˈɒpəzɪt dɪˈliːt ɪt dəˈrektli/"},
+  {"chinese": "剩下的回原文同义替换核对", "english": "For the remaining options verify by checking synonym replacements against the original text", "soundmark": "/fɔːr ðə rɪˈmeɪnɪŋ ˈɒpʃənz ˈverɪfaɪ baɪ ˈtʃekɪŋ ˈsɪnənɪm rɪˈpleɪsmənts əˈɡenst ðə əˈrɪdʒɪnəl tekst/"},
+  {"chinese": "定位找准大写数答案就在转折处同义替换是正解绝对比较要慎入", "english": "Locate precisely with capitals and numbers the answer is at the transition synonym replacement is the correct answer be cautious with absolutes and comparatives", "soundmark": "/loʊˈkeɪt prɪˈsaɪsli wɪð ˈkæpɪtəlz ænd ˈnʌmbərz ðə ˈɑːnsər ɪz æt ðə trænˈzɪʃən ˈsɪnənɪm rɪˈpleɪsmənt ɪz ðə kəˈrekt ˈɑːnsər biː ˈkɔːʃəs wɪð ˈæbsəluːts ænd kəmˈpærətɪvz/"}
+]

@@ -1,0 +1,11 @@
+[
+  {"chinese": "答案来自原文不推理不脑补", "english": "The answer comes from the original text without inference or guessing", "soundmark": "/ðə ˈɑːnsər kʌmz frɒm ðə əˈrɪdʒɪnəl tekst wɪˈðaʊt ˈɪnfərəns ɔːr ˈɡesɪŋ/"},
+  {"chinese": "定位词", "english": "keyword for locating", "soundmark": "/ˈkiːwɜːrd fɔːr loʊˈkeɪtɪŋ/"},
+  {"chinese": "同义替换", "english": "synonym replacement", "soundmark": "/ˈsɪnənɪm rɪˈpleɪsmənt/"},
+  {"chinese": "正确选项是原文的同义改写", "english": "The correct option is a paraphrase of the original text", "soundmark": "/ðə kəˈrekt ˈɒpʃən ɪz ə ˈpærəfreɪz ɒv ðə əˈrɪdʒɪnəl tekst/"},
+  {"chinese": "错误选项有明显特征可以一眼排除", "english": "Wrong options have obvious features and can be eliminated at a glance", "soundmark": "/rɒŋ ˈɒpʃənz hæv ˈɒbviəs ˈfiːtʃərz ænd kæn biː ɪˈlɪmɪneɪtɪd æt ə ɡlɑːns/"},
+  {"chinese": "优先找不会被改写的词如大写人名地名数字", "english": "Prioritize words that will not be paraphrased such as capitalized names places and numbers", "soundmark": "/praɪˈɒrɪtaɪz wɜːrdz ðæt wɪl nɒt biː ˈpærəfreɪzd sʌtʃ æz ˈkæpɪtəlaɪzd neɪmz ˈpleɪsɪz ænd ˈnʌmbərz/"},
+  {"chinese": "答案百分之九十在定位句本句或下一句", "english": "Ninety percent of answers are in the located sentence or the next one", "soundmark": "/ˈnaɪnti pərˈsent ɒv ˈɑːnsərz ɑːr ɪn ðə loʊˈkeɪtɪd ˈsentəns ɔːr ðə nekst wʌn/"},
+  {"chinese": "从选项里最独特的词反推定位原文", "english": "Use the most distinctive word in the options to locate the original text in reverse", "soundmark": "/juːz ðə moʊst dɪˈstɪŋktɪv wɜːrd ɪn ðə ˈɒpʃənz tuː loʊˈkeɪt ðə əˈrɪdʒɪnəl tekst ɪn rɪˈvɜːrs/"},
+  {"chinese": "动词和形容词最容易被替换要慎用作定位词", "english": "Verbs and adjectives are most easily replaced so use them cautiously as locating words", "soundmark": "/vɜːrbz ænd ˈædʒɪktɪvz ɑːr moʊst ˈiːzɪli rɪˈpleɪst soʊ juːz ðəm ˈkɔːʃəsli æz loʊˈkeɪtɪŋ wɜːrdz/"}
+]

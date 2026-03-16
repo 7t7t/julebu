@@ -1,0 +1,20 @@
+[
+  {"chinese": "重要的", "english": "important", "soundmark": "/ɪmˈpɔːrtənt/"},
+  {"chinese": "至关重要的", "english": "vital", "soundmark": "/ˈvaɪtəl/"},
+  {"chinese": "关键的", "english": "crucial", "soundmark": "/ˈkruːʃəl/"},
+  {"chinese": "批判的；关键的", "english": "critical", "soundmark": "/ˈkrɪtɪkəl/"},
+  {"chinese": "必要的", "english": "essential", "soundmark": "/ɪˈsenʃəl/"},
+  {"chinese": "足够的", "english": "enough", "soundmark": "/ɪˈnʌf/"},
+  {"chinese": "充足的", "english": "adequate", "soundmark": "/ˈædɪkwət/"},
+  {"chinese": "充分的", "english": "sufficient", "soundmark": "/səˈfɪʃənt/"},
+  {"chinese": "普遍的", "english": "common", "soundmark": "/ˈkɒmən/"},
+  {"chinese": "广泛的", "english": "widespread", "soundmark": "/ˈwaɪdspred/"},
+  {"chinese": "普遍的（全球性）", "english": "universal", "soundmark": "/ˌjuːnɪˈvɜːrsəl/"},
+  {"chinese": "明显的", "english": "obvious", "soundmark": "/ˈɒbviəs/"},
+  {"chinese": "显然的", "english": "apparent", "soundmark": "/əˈpærənt/"},
+  {"chinese": "显著的", "english": "remarkable", "soundmark": "/rɪˈmɑːrkəbəl/"},
+  {"chinese": "重大的", "english": "significant", "soundmark": "/sɪɡˈnɪfɪkənt/"},
+  {"chinese": "可能的", "english": "possible", "soundmark": "/ˈpɒsɪbəl/"},
+  {"chinese": "可能的（概率性）", "english": "likely", "soundmark": "/ˈlaɪkli/"},
+  {"chinese": "潜在的", "english": "potential", "soundmark": "/pəˈtenʃəl/"}
+]

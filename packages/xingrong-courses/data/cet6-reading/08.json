@@ -1,0 +1,23 @@
+[
+  {"chinese": "方法", "english": "way", "soundmark": "/weɪ/"},
+  {"chinese": "方法（同义替换）", "english": "approach", "soundmark": "/əˈproʊtʃ/"},
+  {"chinese": "方法（正式）", "english": "method", "soundmark": "/ˈmeθəd/"},
+  {"chinese": "手段", "english": "means", "soundmark": "/miːnz/"},
+  {"chinese": "结果", "english": "result", "soundmark": "/rɪˈzʌlt/"},
+  {"chinese": "后果", "english": "consequence", "soundmark": "/ˈkɒnsɪkwəns/"},
+  {"chinese": "结果（同义替换）", "english": "outcome", "soundmark": "/ˈaʊtkʌm/"},
+  {"chinese": "原因", "english": "reason", "soundmark": "/ˈriːzən/"},
+  {"chinese": "因素", "english": "factor", "soundmark": "/ˈfæktər/"},
+  {"chinese": "起因", "english": "cause", "soundmark": "/kɔːz/"},
+  {"chinese": "目的", "english": "purpose", "soundmark": "/ˈpɜːrpəs/"},
+  {"chinese": "目标", "english": "aim", "soundmark": "/eɪm/"},
+  {"chinese": "目标（同义替换）", "english": "goal", "soundmark": "/ɡoʊl/"},
+  {"chinese": "优势", "english": "advantage", "soundmark": "/ədˈvɑːntɪdʒ/"},
+  {"chinese": "长处", "english": "strength", "soundmark": "/streŋθ/"},
+  {"chinese": "优点", "english": "merit", "soundmark": "/ˈmerɪt/"},
+  {"chinese": "许多", "english": "many", "soundmark": "/ˈmeni/"},
+  {"chinese": "大量的", "english": "numerous", "soundmark": "/ˈnjuːmərəs/"},
+  {"chinese": "若干", "english": "a number of", "soundmark": "/ə ˈnʌmbər ɒv/"},
+  {"chinese": "多种的", "english": "multiple", "soundmark": "/ˈmʌltɪpəl/"},
+  {"chinese": "越来越多地", "english": "increasingly", "soundmark": "/ɪnˈkriːsɪŋli/"}
+]
