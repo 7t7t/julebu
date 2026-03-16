@@ -7,6 +7,9 @@ PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "===== Alrahim 生产环境部署 ====="
 
+# 设置生产环境变量（所有后续命令生效）
+export NODE_ENV=prod
+
 # 检查 Node 版本
 NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
 if [ "$NODE_VERSION" -lt 20 ]; then
@@ -30,7 +33,7 @@ pnpm schema:build
 
 # 3. 初始化数据库
 echo "[3/7] 初始化数据库..."
-NODE_ENV=prod pnpm db:init
+pnpm db:init
 
 # 4. 构建后端
 echo "[4/7] 构建后端..."
@@ -55,7 +58,7 @@ if pm2 describe alrahim_api > /dev/null 2>&1; then
   pm2 restart alrahim_api
 else
   echo "首次启动 API 服务..."
-  NODE_ENV=prod pm2 start ecosystem.config.js
+  pm2 start ecosystem.config.js
 fi
 pm2 save
 cd ../..
