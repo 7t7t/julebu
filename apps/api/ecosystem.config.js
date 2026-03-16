@@ -5,7 +5,7 @@ module.exports = {
       script: "pnpm",
       args: "start:prod",
       cwd: ".",
-      instances: 2,
+      instances: 1,
       exec_mode: "cluster",
       autorestart: true,
       watch: false,
