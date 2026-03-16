@@ -255,3 +255,52 @@ docker images
   4. 将 apps/client/.output/public/ 部署到 Nginx 的 root 目录
   5. 配置 Nginx：cp nginx.conf /etc/nginx/conf.d/alrahim.conf && nginx -s reload
 ```
+
+在你本地电脑执行：
+ssh -L 3011:127.0.0.1:3011 root@171.80.9.120
+
+然后浏览器打开 http://localhost:3011，进入 Logto Admin Console：
+
+1. 创建前端应用：Applications → Create → Single Page App
+
+   - 记下 App ID
+   - 设置 Redirect URI：https://cet.vralph.top/callback
+   - 设置 Post sign-out redirect URI：https://cet.vralph.top/
+
+2. 创建后端 M2M 应用：Applications → Create → Machine-to-Machine
+
+   - 记下 App ID 和 App Secret
+   - 授予 Management API 权限
+
+3. 创建 API Resource：API Resources → Create
+
+   - API Identifier：https://cet-api.vralph.top/
+
+拿到新的 ID 后，更新服务器上的配置：
+
+# 更新前端配置
+
+vi /data/julebu/apps/client/.env.prod
+
+# 修改 LOGTO_APP_ID="新的前端App ID"
+
+# 更新后端配置
+
+vi /data/julebu/apps/api/.env.prod
+
+# 修改 LOGTO_CLIENT_ID="新的M2M App ID"
+
+# 修改 LOGTO_CLIENT_SECRET="新的M2M App Secret"
+
+# 重新构建前端并重启后端
+
+cd /data/julebu
+pnpm build:client
+pm2 restart alrahim_api
+
+singlepage
+vbmzypb2ffva9da07b1fs
+
+m2m
+tqjqqmzyzpgijt9l5c102
+1ub0ewItBFTahe9bFEPCimxK0T17lFPw

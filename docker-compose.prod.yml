@@ -40,6 +40,9 @@ services:
         condition: service_healthy
     image: svhd/logto:1.18.0
     entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     ports:
       - "127.0.0.1:3010:3010"
       - "127.0.0.1:3011:3011"
