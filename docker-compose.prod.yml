@@ -43,6 +43,9 @@ services:
     ports:
       - "127.0.0.1:3010:3010"
       - "127.0.0.1:3011:3011"
+    extra_hosts:
+      - "cet-admin.vralph.top:host-gateway"
+      - "cet-auth.vralph.top:host-gateway"
     environment:
       - TRUST_PROXY_HEADER=1
       - DB_URL=postgres://postgres:${LOGTO_DB_PASSWORD:-p0stgr3s}@logtoPostgres:5432/logto
