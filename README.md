@@ -3,9 +3,6 @@
   <h1>Earthworm</h1>
 </div>
 
-
-
-
 ## ⚡ 介绍
 
 通过连词构句的方式让你更好的学习英语~ 😊
@@ -249,3 +246,12 @@ newgrp docker
 docker images
 ```
 
+### 生产部署
+
+```
+  1. 修改 .env.prod、apps/api/.env.prod、apps/client/.env.prod 中的实际域名和密码
+  2. 启动基础服务：pnpm docker:prod
+  3. 执行部署：bash deploy.sh
+  4. 将 apps/client/.output/public/ 部署到 Nginx 的 root 目录
+  5. 配置 Nginx：cp nginx.conf /etc/nginx/conf.d/alrahim.conf && nginx -s reload
+```

@@ -45,7 +45,7 @@ if pm2 describe alrahim_api > /dev/null 2>&1; then
   pm2 restart alrahim_api
 else
   echo "首次启动 API 服务..."
-  cross-env NODE_ENV=prod pm2 start ecosystem.config.js
+  NODE_ENV=prod pm2 start ecosystem.config.js
 fi
 pm2 save
 cd ../..
