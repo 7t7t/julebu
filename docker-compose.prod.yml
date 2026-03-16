@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  db:
+    restart: always
+    image: postgres:14-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: alrahim
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}
+      POSTGRES_DB: alrahim
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alrahim"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  logto:
+    restart: always
+    depends_on:
+      logtoPostgres:
+        condition: service_healthy
+    image: svhd/logto:1.18.0
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    ports:
+      - "127.0.0.1:3010:3010"
+      - "127.0.0.1:3011:3011"
+    environment:
+      - TRUST_PROXY_HEADER=1
+      - DB_URL=postgres://postgres:${LOGTO_DB_PASSWORD:-p0stgr3s}@logtoPostgres:5432/logto
+      - PORT=3010
+      - ADMIN_PORT=3011
+      - ENDPOINT=${LOGTO_ENDPOINT:-https://cet-auth.vralph.top}
+      - ADMIN_ENDPOINT=${LOGTO_ADMIN_ENDPOINT:-https://cet-admin.vralph.top}
+
+  logtoPostgres:
+    restart: always
+    image: postgres:14-alpine
+    user: postgres
+    volumes:
+      - logto_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${LOGTO_DB_PASSWORD:-p0stgr3s}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
+    driver: local
+  redis_data:
+    driver: local
+  logto_pg_data:
+    driver: local

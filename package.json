@@ -1,5 +1,5 @@
 {
-  "name": "earthworm",
+  "name": "alrahim",
   "version": "1.0.0",
   "description": "",
   "packageManager": "pnpm@9.3.0+sha256.e1f9e8d1a16607a46dd3c158b5f7a7dc7945501d1c6222d454d63d033d1d918f",
@@ -18,6 +18,9 @@
     "docker:stop": "docker-compose stop",
     "docker:delete": "docker-compose down",
     "docker:down": "docker-compose down --volumes",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d",
+    "docker:prod:stop": "docker-compose -f docker-compose.prod.yml stop",
+    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
     "build:server": "pnpm schema:build && pnpm -F api build",
     "build:client": "pnpm -F client generate",
     "prod:serve": "pnpm -F api start:prod:pm",

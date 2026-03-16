@@ -1,16 +1,17 @@
 module.exports = {
   apps: [
     {
-      name: "earthworm_api",
+      name: "alrahim_api",
       script: "pnpm",
       args: "start:prod",
       cwd: ".",
-      instances: 1,
+      instances: 2,
+      exec_mode: "cluster",
       autorestart: true,
       watch: false,
       max_memory_restart: "1G",
       env: {
-        NODE_ENV: "production",
+        NODE_ENV: "prod",
       },
     },
   ],
