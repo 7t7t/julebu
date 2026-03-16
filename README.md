@@ -1,6 +1,6 @@
 <div align="center">
-  <img alt="Earthworm" width="120" height="120" src="./assets/logo/logo-1000.png">
-  <h1>Earthworm</h1>
+  <img alt="Alrahim" width="120" height="120" src="./assets/logo/logo.png">
+  <h1>Alrahim</h1>
 </div>
 
 ## ⚡ 介绍
