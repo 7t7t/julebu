@@ -248,59 +248,259 @@ docker images
 
 ### 生产部署
 
+#### 服务架构
+
+| 域名                   | 服务              | 端口 | 运行方式       |
+| ---------------------- | ----------------- | ---- | -------------- |
+| `cet.vralph.top`       | Nuxt 前端（静态） | —    | Nginx 直接托管 |
+| `cet-api.vralph.top`   | NestJS 后端 API   | 3001 | PM2 cluster    |
+| `cet-auth.vralph.top`  | Logto 认证服务    | 3010 | Docker         |
+| `cet-admin.vralph.top` | Logto 管理后台    | 3011 | Docker         |
+
+服务器路径：`/data/julebu`
+
+---
+
+#### 第一步：配置环境变量
+
+**根目录 `.env.prod`**（Docker Compose 使用）：
+
+```env
+DB_PASSWORD=你的数据库密码
+LOGTO_DB_PASSWORD=你的Logto数据库密码
+LOGTO_ENDPOINT=https://cet-auth.vralph.top
+LOGTO_ADMIN_ENDPOINT=https://cet-admin.vralph.top
 ```
-  1. 修改 .env.prod、apps/api/.env.prod、apps/client/.env.prod 中的实际域名和密码
-  2. 启动基础服务：pnpm docker:prod
-  3. 执行部署：bash deploy.sh
-  4. 将 apps/client/.output/public/ 部署到 Nginx 的 root 目录
-  5. 配置 Nginx：cp nginx.conf /etc/nginx/conf.d/alrahim.conf && nginx -s reload
+
+**`apps/api/.env.prod`**（后端使用）：
+
+```env
+DATABASE_URL="postgres://alrahim:你的DB_PASSWORD@127.0.0.1:5432/alrahim"
+SECRET="随机密钥(openssl rand -hex 32)"
+REDIS_URL="redis://127.0.0.1:6389"
+REDIS_PASSWORD=""
+LOGTO_CLIENT_ID="M2M应用的App ID"
+LOGTO_CLIENT_SECRET="M2M应用的App Secret"
+LOGTO_M2M_API="https://default.logto.app/api"
+LOGTO_ENDPOINT="https://cet-auth.vralph.top/"
+BACKEND_ENDPOINT="https://cet-api.vralph.top/"
+PORT=3001
 ```
 
-在你本地电脑执行：
-ssh -L 3011:127.0.0.1:3011 root@171.80.9.120
+**`apps/client/.env.prod`**（前端使用）：
 
-然后浏览器打开 http://localhost:3011，进入 Logto Admin Console：
+```env
+API_BASE="https://cet-api.vralph.top"
+LOGTO_APP_ID="SPA应用的App ID"
+LOGTO_ENDPOINT="https://cet-auth.vralph.top/"
+BACKEND_ENDPOINT="https://cet-api.vralph.top/"
+LOGTO_SIGN_IN_REDIRECT_URI="https://cet.vralph.top/callback"
+LOGTO_SIGN_OUT_REDIRECT_URI="https://cet.vralph.top/"
+```
 
-1. 创建前端应用：Applications → Create → Single Page App
+---
 
-   - 记下 App ID
-   - 设置 Redirect URI：https://cet.vralph.top/callback
-   - 设置 Post sign-out redirect URI：https://cet.vralph.top/
+#### 第二步：启动 Docker 基础服务
 
-2. 创建后端 M2M 应用：Applications → Create → Machine-to-Machine
+**重要：先修改 `docker-compose.prod.yml`，给 logto 服务添加 `extra_hosts`**，否则容器内 DNS 无法解析外部域名，导致 502/500：
 
-   - 记下 App ID 和 App Secret
-   - 授予 Management API 权限
+```yaml
+logto:
+  # ... 其他配置不变
+  extra_hosts:
+    - "cet-admin.vralph.top:host-gateway"
+    - "cet-auth.vralph.top:host-gateway"
+```
 
-3. 创建 API Resource：API Resources → Create
+然后启动：
 
-   - API Identifier：https://cet-api.vralph.top/
-
-拿到新的 ID 后，更新服务器上的配置：
-
-# 更新前端配置
-
-vi /data/julebu/apps/client/.env.prod
-
-# 修改 LOGTO_APP_ID="新的前端App ID"
-
-# 更新后端配置
-
-vi /data/julebu/apps/api/.env.prod
-
-# 修改 LOGTO_CLIENT_ID="新的M2M App ID"
-
-# 修改 LOGTO_CLIENT_SECRET="新的M2M App Secret"
-
-# 重新构建前端并重启后端
-
+```bash
 cd /data/julebu
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+```
+
+验证容器状态：
+
+```bash
+docker ps -a | grep julebu
+# 确保 db、redis、logto、logtoPostgres 都是 Up (healthy)
+```
+
+---
+
+#### 第三步：配置 Logto（管理后台）
+
+访问 https://cet-admin.vralph.top/console
+
+##### 3.1 创建 API Resource
+
+进入 **API Resources** → **Create API Resource**：
+
+| API Name | API Identifier                |
+| -------- | ----------------------------- |
+| CET API  | `https://cet-api.vralph.top/` |
+
+> `https://default.logto.app/api`（Logto Management API）默认已存在，无需创建。
+
+##### 3.2 创建前端应用（SPA）
+
+**Applications** → **Create** → **Single Page Application**：
+
+- Redirect URI: `https://cet.vralph.top/callback`
+- Post Sign-out Redirect URI: `https://cet.vralph.top/`
+- 记录 **App ID** → 填入 `apps/client/.env.prod` 的 `LOGTO_APP_ID`
+
+##### 3.3 创建后端应用（M2M）
+
+**Applications** → **Create** → **Machine-to-Machine**：
+
+- 记录 **App ID** 和 **App Secret** → 填入 `apps/api/.env.prod`
+
+**关键：给 M2M 应用分配 Management API 权限**
+
+1. 进入 **Roles** 页面，确保有一个 M2M Role 包含 **Logto Management API** 的 `all` 权限（没有就创建）
+2. 回到 M2M Application → **Roles** 标签 → **Assign roles** → 分配该 Role
+
+> 不分配权限会导致后端调用 Logto API 时报 `invalid_client`。
+
+---
+
+#### 第四步：构建与部署
+
+使用一键部署脚本：
+
+```bash
+cd /data/julebu
+bash deploy.sh
+```
+
+或手动逐步执行：
+
+```bash
+cd /data/julebu
+
+# 1. 安装依赖
+pnpm install --frozen-lockfile
+
+# 2. 构建 schema
+pnpm schema:build
+
+# 3. 初始化数据库（首次部署必须，导入课程数据）
+pnpm db:init
+
+# 4. 构建后端
+pnpm build:server
+
+# 5. 构建前端（静态生成）
 pnpm build:client
+
+# 6. 更新 Nginx 配置
+cp nginx.conf /usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/sbin/nginx -t
+/usr/local/nginx/sbin/nginx -s reload
+
+# 7. 启动后端 API（PM2 cluster 模式，2 实例）
+pnpm prod:serve
+```
+
+---
+
+#### 第五步：验证部署
+
+```bash
+# Docker 容器状态
+docker ps -a | grep julebu
+
+# PM2 进程状态
+pm2 list
+
+# 测试 API（应返回 Unauthorized，表示服务正常）
+curl -s https://cet-api.vralph.top/user/setup -X POST \
+  -H "Content-Type: application/json" -d '{}'
+# → {"data":{},"message":"Unauthorized"}
+
+# 测试前端（应返回 200）
+curl -s -o /dev/null -w "%{http_code}" https://cet.vralph.top/
+# → 200
+
+# 测试 Logto M2M Token（应返回 access_token）
+curl -X POST https://cet-auth.vralph.top/oidc/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Basic $(echo -n 'CLIENT_ID:CLIENT_SECRET' | base64)" \
+  -d "grant_type=client_credentials&resource=https://default.logto.app/api&scope=all"
+```
+
+---
+
+#### 常见问题排查
+
+##### 502 Bad Gateway
+
+上游服务未运行：
+
+```bash
+# 检查 Docker
+docker ps -a | grep logto
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+
+# 检查 PM2
+pm2 list
+pm2 logs alrahim_api --lines 50
+```
+
+##### Logto 容器 DNS 解析失败（`getaddrinfo EAI_AGAIN`）
+
+确保 `docker-compose.prod.yml` 中 logto 服务配置了 `extra_hosts`，然后重建容器：
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d logto
+```
+
+##### `invalid_client` 错误
+
+- **前端**：检查 `apps/client/.env.prod` 的 `LOGTO_APP_ID` 与 Logto SPA 应用 ID 一致
+- **后端**：检查 `apps/api/.env.prod` 的 `LOGTO_CLIENT_ID` 和 `LOGTO_CLIENT_SECRET`
+- **权限不足**：确保 M2M 应用已分配包含 Logto Management API `all` 权限的 Role
+
+##### `resource indicator is missing, or unknown`
+
+在 Logto 管理后台 → API Resources 创建 `https://cet-api.vralph.top/`。
+
+##### 后端 500 `Cannot destructure property 'id'`
+
+数据库无课程数据：
+
+```bash
+pnpm schema:build && pnpm db:init
+```
+
+##### PM2 环境变量不生效
+
+`pm2 restart` 不会刷新环境变量，必须先 delete：
+
+```bash
+pm2 delete alrahim_api
+cd /data/julebu && pnpm prod:serve
+```
+
+---
+
+#### 日常运维
+
+```bash
+# 查看 API 日志
+pm2 logs alrahim_api
+
+# 重启 API（不刷新环境变量）
 pm2 restart alrahim_api
 
-singlepage
-ntznbyltojrrn6a9fo3mq
+# 重启 API（刷新环境变量）
+pm2 delete alrahim_api && cd /data/julebu && pnpm prod:serve
 
-m2m
-avwc7wv05uf20l3mgyk8c
-gRtDaJ1gB0hRCLPHX83jNLslUDX489AQ
+# 重启 Docker 服务
+docker compose -f docker-compose.prod.yml --env-file .env.prod restart
+
+# 停止所有服务
+pm2 delete all
+docker compose -f docker-compose.prod.yml stop
+```
