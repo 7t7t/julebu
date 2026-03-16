@@ -12,6 +12,7 @@
     "db:init:test:ci": "pnpm schema:build && pnpm -F @earthworm/db run init:ci",
     "db:studio": "pnpm -F @earthworm/db db:studio",
     "db:upload": "pnpm -F @earthworm/xingrong-courses upload",
+    "db:upload:all-new": "pnpm -F @earthworm/xingrong-courses upload:cet6-translation && pnpm -F @earthworm/xingrong-courses upload:cet6-reading && pnpm -F @earthworm/xingrong-courses upload:cet6-listening",
     "dev:serve": "pnpm schema:build && pnpm -F api start:dev",
     "dev:client": "pnpm -F client dev",
     "docker:start": "docker-compose up -d",
