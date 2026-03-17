@@ -27,6 +27,15 @@ export async function getToken() {
   return accessToken;
 }
 
+export async function refreshToken() {
+  try {
+    const accessToken = await logto.getAccessToken(runtimeConfig.public.backendEndpoint);
+    return accessToken;
+  } catch {
+    return null;
+  }
+}
+
 export function fetchUserInfo() {
   return logto.fetchUserInfo();
 }
