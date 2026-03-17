@@ -1,84 +1,128 @@
 <template>
-  <div class="tool-bar">
-    <!-- 左侧 -->
-    <div class="flex items-center gap-1">
-      <NuxtLink
-        class="tool-icon-btn"
-        :href="`/course-pack/${courseStore.currentCourse?.coursePackId}`"
+  <!-- 收起时显示的迷你条 -->
+  <div
+    v-if="isToolbarCollapsed"
+    class="toolbar-collapsed"
+  >
+    <div class="flex items-center gap-2">
+      <span class="tool-course-progress"
+        >{{ currentSchedule }}/{{ courseStore.visibleStatementsCount }}</span
       >
-        <UTooltip text="课程列表">
-          <IconsExpand class="h-5 w-5" />
-        </UTooltip>
-      </NuxtLink>
-      <div
-        class="tool-course-title"
-        @click="openCourseContents"
-      >
-        <UTooltip text="课程题目列表">
-          <span class="tool-course-name">{{ courseStore.currentCourse?.title }}</span>
-          <span class="tool-course-progress"
-            >{{ currentSchedule }}/{{ courseStore.visibleStatementsCount }}</span
-          >
-        </UTooltip>
-      </div>
-      <MainStudyVideoLink :video="courseStore.currentCourse?.video" />
-    </div>
-
-    <!-- 右侧 -->
-    <div class="flex items-center gap-1">
-      <div
-        @click="openGameSettingModal"
-        v-if="isDictationMode()"
-      >
-        <UTooltip text="游戏设置">
-          <UIcon
-            name="i-ph-gear"
-            class="tool-icon-btn h-5 w-5"
-          />
-        </UTooltip>
-      </div>
-
-      <div
-        v-if="isAuthenticated()"
-        @click="pauseGame"
-      >
-        <UTooltip
-          text="暂停游戏"
-          :shortcuts="parseShortcut(shortcutKeys.pause)"
-        >
-          <UIcon
-            name="i-ph-pause"
-            class="tool-icon-btn h-5 w-5"
-          />
-        </UTooltip>
-      </div>
-
-      <div @click="handleDoAgain">
-        <UTooltip text="重置当前课程进度">
-          <UIcon
-            name="i-ph-arrow-counter-clockwise"
-            class="tool-icon-btn h-5 w-5"
-          />
-        </UTooltip>
-      </div>
-      <div @click="rankingStore.showRankModal">
-        <UTooltip text="排行榜">
-          <UIcon
-            name="i-ph-ranking"
-            class="tool-icon-btn h-5 w-5"
-          />
-        </UTooltip>
+      <div class="flex-1">
+        <CommonProgressBar
+          class="h-1.5"
+          :percentage="currentPercentage"
+          :show-label="false"
+        />
       </div>
     </div>
-
-    <MainCourseContents v-model:isOpen="isOpenCourseContents"></MainCourseContents>
+    <div
+      class="tool-icon-btn"
+      @click="toggleToolbar"
+    >
+      <UTooltip text="展开工具栏">
+        <UIcon
+          name="i-ph-caret-down"
+          class="h-4 w-4"
+        />
+      </UTooltip>
+    </div>
   </div>
 
-  <CommonProgressBar
-    class="h-3"
-    :percentage="currentPercentage"
-    :show-label="false"
-  />
+  <!-- 展开时的完整工具栏 -->
+  <template v-else>
+    <div class="tool-bar">
+      <!-- 左侧 -->
+      <div class="flex items-center gap-1">
+        <NuxtLink
+          class="tool-icon-btn"
+          :href="`/course-pack/${courseStore.currentCourse?.coursePackId}`"
+        >
+          <UTooltip text="课程列表">
+            <IconsExpand class="h-5 w-5" />
+          </UTooltip>
+        </NuxtLink>
+        <div
+          class="tool-course-title"
+          @click="openCourseContents"
+        >
+          <UTooltip text="课程题目列表">
+            <span class="tool-course-name">{{ courseStore.currentCourse?.title }}</span>
+            <span class="tool-course-progress"
+              >{{ currentSchedule }}/{{ courseStore.visibleStatementsCount }}</span
+            >
+          </UTooltip>
+        </div>
+        <MainStudyVideoLink :video="courseStore.currentCourse?.video" />
+      </div>
+
+      <!-- 右侧 -->
+      <div class="flex items-center gap-1">
+        <div
+          @click="openGameSettingModal"
+          v-if="isDictationMode()"
+        >
+          <UTooltip text="游戏设置">
+            <UIcon
+              name="i-ph-gear"
+              class="tool-icon-btn h-5 w-5"
+            />
+          </UTooltip>
+        </div>
+
+        <div
+          v-if="isAuthenticated()"
+          @click="pauseGame"
+        >
+          <UTooltip
+            text="暂停游戏"
+            :shortcuts="parseShortcut(shortcutKeys.pause)"
+          >
+            <UIcon
+              name="i-ph-pause"
+              class="tool-icon-btn h-5 w-5"
+            />
+          </UTooltip>
+        </div>
+
+        <div @click="handleDoAgain">
+          <UTooltip text="重置当前课程进度">
+            <UIcon
+              name="i-ph-arrow-counter-clockwise"
+              class="tool-icon-btn h-5 w-5"
+            />
+          </UTooltip>
+        </div>
+        <div @click="rankingStore.showRankModal">
+          <UTooltip text="排行榜">
+            <UIcon
+              name="i-ph-ranking"
+              class="tool-icon-btn h-5 w-5"
+            />
+          </UTooltip>
+        </div>
+        <div
+          class="tool-icon-btn"
+          @click="toggleToolbar"
+        >
+          <UTooltip text="收起工具栏">
+            <UIcon
+              name="i-ph-caret-up"
+              class="h-5 w-5"
+            />
+          </UTooltip>
+        </div>
+      </div>
+
+      <MainCourseContents v-model:isOpen="isOpenCourseContents"></MainCourseContents>
+    </div>
+
+    <CommonProgressBar
+      class="h-3"
+      :percentage="currentPercentage"
+      :show-label="false"
+    />
+  </template>
   <RankRankingBoard />
 </template>
 
@@ -94,6 +138,7 @@ import { clearQuestionInput } from "~/composables/main/question";
 import { useCourseContents } from "~/composables/main/useCourseContents";
 import { useGamePause } from "~/composables/main/useGamePause";
 import { useGameSetting } from "~/composables/main/useGameSetting";
+import { useLayoutCollapse } from "~/composables/main/useLayoutCollapse";
 import { useRanking } from "~/composables/rank/rankingList";
 import { useGamePlayMode } from "~/composables/user/gamePlayMode";
 import { parseShortcut, useShortcutKeyMode } from "~/composables/user/shortcutKey";
@@ -106,6 +151,7 @@ const rankingStore = useRanking();
 const courseStore = useCourseStore();
 const { focusInput } = useQuestionInput();
 const { openCourseContents } = useCourseContents();
+const { isToolbarCollapsed, toggleToolbar } = useLayoutCollapse();
 const { handleDoAgain } = useDoAgain();
 const { pauseGame } = useGamePause();
 const { openGameSettingModal } = useGameSetting();
@@ -195,5 +241,10 @@ function useDoAgain() {
 .tool-course-progress {
   @apply rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-600
          dark:bg-purple-900/30 dark:text-purple-400;
+}
+
+.toolbar-collapsed {
+  @apply flex items-center gap-3 py-1.5 text-sm;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
 }
 </style>
