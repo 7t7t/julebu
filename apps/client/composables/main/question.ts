@@ -67,6 +67,7 @@ export function useInput({
     // Fix_Input 模式：只更新当前编辑的错误单词，不动其他单词
     if (mode.value === Mode.Fix_Input && currentEditWord) {
       syncCurrentEditWordFromInput();
+      validateCurrentEditWord();
       return;
     }
 
@@ -93,6 +94,20 @@ export function useInput({
     // 重算所有单词位置
     recalculateWordPositions();
     updateActiveWord(currentEditWord.end);
+  }
+
+  /**
+   * Fix_Input 模式下，实时校验当前正在编辑的错误单词
+   * 输入正确时清除 incorrect 标记并设置 correct 标记
+   */
+  function validateCurrentEditWord() {
+    if (!currentEditWord) return;
+    const formatted = formatInputText(currentEditWord.userInput);
+    const isCorrect = formatted === currentEditWord.text.toLocaleLowerCase();
+    currentEditWord.correct = isCorrect;
+    if (isCorrect) {
+      currentEditWord.incorrect = false;
+    }
   }
 
   function createWord(word: string, id: number) {
