@@ -476,11 +476,23 @@ pnpm schema:build && pnpm db:init
 
 ##### PM2 环境变量不生效
 
+现在可以设置开机自启：
+
+pm2 save
+pm2 startup
+
 `pm2 restart` 不会刷新环境变量，必须先 delete：
 
 ```bash
 pm2 delete alrahim_api
 cd /data/julebu && pnpm prod:serve
+```
+
+##### PM2 启动
+
+```
+export NODE_ENV=prod
+pm2 start "pnpm run prod:serve" --name server
 ```
 
 ---
@@ -504,3 +516,6 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod restart
 pm2 delete all
 docker compose -f docker-compose.prod.yml stop
 ```
+
+admin
+dmUT76yQ

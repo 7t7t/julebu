@@ -1,5 +1,15 @@
 {
   "permissions": {
-    "allow": ["Bash(wc:*)", "Bash(find:*)", "Bash(grep:*)"]
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(where soffice:*)",
+      "Bash(where libreoffice:*)",
+      "Read(//c/Program Files/**)",
+      "Bash(pip install:*)"
+    ]
   }
 }
