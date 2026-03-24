@@ -24,7 +24,7 @@
     "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
     "build:server": "pnpm schema:build && pnpm -F api build",
     "build:client": "pnpm -F client generate",
-    "prod:serve": "pnpm -F api start:prod:pm",
+    "prod:serve": "cd apps/api && pm2 start ecosystem.config.js",
     "format": "prettier --write --cache .",
     "format-check": "prettier --check --cache .",
     "test": "pnpm -F api test && pnpm -F client test",
