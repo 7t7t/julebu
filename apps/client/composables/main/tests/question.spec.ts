@@ -113,6 +113,37 @@ describe("question", () => {
     expect(wrongCallback).not.toBeCalled();
   });
 
+  it.each([
+    { source: "the scientific expedition.", input: "the scientific expedition" },
+    { source: "the scientific expedition.", input: "the scientific expedition." },
+    { source: "is it true?", input: "is it true" },
+    { source: "is it true?", input: "is it true?" },
+    { source: "watch out!", input: "watch out" },
+    { source: "watch out!", input: "watch out!" },
+  ])(
+    "should be correct when source is '$source' and input is '$input'",
+    async ({ source, input }) => {
+      const setInputCursorPosition = () => {};
+      const getInputCursorPosition = () => 0;
+
+      const { setInputValue, submitAnswer, initialize } = useInput({
+        source: () => source,
+        setInputCursorPosition,
+        getInputCursorPosition,
+      });
+
+      initialize();
+      setInputValue(input);
+
+      const correctCallback = vi.fn();
+      const wrongCallback = vi.fn();
+      submitAnswer(correctCallback, wrongCallback);
+
+      expect(correctCallback).toBeCalled();
+      expect(wrongCallback).not.toBeCalled();
+    },
+  );
+
   it("should be incorrect when checked the answer", async () => {
     const setInputCursorPosition = () => {};
     const getInputCursorPosition = () => 0;

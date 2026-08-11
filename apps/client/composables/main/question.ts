@@ -28,6 +28,8 @@ enum Mode {
 }
 
 const separator = " ";
+// 句末标点：校验时忽略
+const endPunctuation = /[.?!]$/;
 
 const inputValue = ref("");
 
@@ -102,8 +104,7 @@ export function useInput({
    */
   function validateCurrentEditWord() {
     if (!currentEditWord) return;
-    const formatted = formatInputText(currentEditWord.userInput);
-    const isCorrect = formatted === currentEditWord.text.toLocaleLowerCase();
+    const isCorrect = isUserInputCorrect(currentEditWord, userInputWords.indexOf(currentEditWord));
     currentEditWord.correct = isCorrect;
     if (isCorrect) {
       currentEditWord.incorrect = false;
@@ -214,26 +215,25 @@ export function useInput({
   function validateTypedWords() {
     if (mode.value !== Mode.Input) return;
 
-    for (const word of userInputWords) {
+    userInputWords.forEach((word, index) => {
       if (word.isActive) {
         // 当前正在编辑的单词不校验
         word.incorrect = false;
         word.correct = false;
-        continue;
+        return;
       }
 
       if (!word.userInput) {
         // 还没输入的不校验
         word.incorrect = false;
         word.correct = false;
-        continue;
+        return;
       }
 
-      const formatted = formatInputText(word.userInput);
-      const isCorrect = formatted === word.text.toLocaleLowerCase();
+      const isCorrect = isUserInputCorrect(word, index);
       word.correct = isCorrect;
       word.incorrect = !isCorrect;
-    }
+    });
   }
 
   function checkWordCorrect() {
@@ -243,18 +243,32 @@ export function useInput({
   function formatLastWordUserInput(word: Word, index: number) {
     const isLastWord = userInputWords.length - 1 === index;
     if (isLastWord) {
-      if (word.userInput.endsWith(".")) {
-        word.userInput = word.userInput.slice(0, -1);
-      }
+      word.userInput = word.userInput.replace(endPunctuation, "");
     }
+  }
+
+  /**
+   * 校验单个单词：句末单词的结尾标点（. ? !）不参与比较
+   * （课程数据的句子自带标点，用户输入可带可不带）
+   */
+  function isUserInputCorrect(word: Word, index: number) {
+    let input = formatInputText(word.userInput);
+    let expected = word.text.toLocaleLowerCase();
+
+    const isLastWord = userInputWords.length - 1 === index;
+    if (isLastWord) {
+      input = input.replace(endPunctuation, "");
+      expected = expected.replace(endPunctuation, "");
+    }
+
+    return input === expected;
   }
 
   function markIncorrectWord() {
     userInputWords.forEach((word, index) => {
       formatLastWordUserInput(word, index);
-      const formattedWord = formatInputText(word.userInput);
 
-      if (formattedWord !== word.text.toLocaleLowerCase()) {
+      if (!isUserInputCorrect(word, index)) {
         word.incorrect = true;
         word.correct = false;
       } else {
